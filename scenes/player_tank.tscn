@@ -226,3 +226,9 @@ limit_top = -324
 limit_right = 576
 limit_bottom = 324
 script = ExtResource("9_rhptn")
+
+[node name="DamageCooldown" type="Timer" parent="." unique_id=1394408055]
+wait_time = 2.0
+one_shot = true
+
+[connection signal="timeout" from="DamageCooldown" to="." method="_on_damage_cooldown_timeout"]

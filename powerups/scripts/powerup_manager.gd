@@ -11,7 +11,8 @@ func _ready() -> void:
 	dir.list_dir_begin()
 	var file_name = dir.get_next()
 	while file_name != "":
-		var full_path = POWERUPS_FOLDER + file_name
+		var cleaned_file_name = file_name.replace(".remap", "")
+		var full_path = POWERUPS_FOLDER + cleaned_file_name
 		var resource = load(full_path)
 		powerup_List.append(resource)
 		file_name = dir.get_next()

@@ -11,6 +11,7 @@ var spawnPoint = null
 var powerData : PowerupData = null
 var cameraSetup = false
 var next_shot_power = false
+var flashTween
 @onready var camera = $Camera2D
 
 func _ready() -> void:
@@ -21,6 +22,12 @@ func _ready() -> void:
 	$MultiplayerSynchronizer.set_multiplayer_authority(str(name).to_int())
 	GameManager.Players[str(name).to_int()].playerObject = self
 	$MultiplayerSynchronizer.delta_synchronized.connect(_on_synchronized)
+	flashTween = create_tween()
+	flashTween.set_loops()
+	flashTween.tween_property(self, "modulate:a", .3, .8)
+	flashTween.tween_property(self, "modulate:a", 1.0, .8)
+	modulate.a = 1.0
+	flashTween.pause()
 	
 func _on_synchronized():
 	if cameraSetup:
@@ -33,6 +40,9 @@ func _on_synchronized():
 
 func _physics_process(delta: float) -> void:
 	if $MultiplayerSynchronizer.get_multiplayer_authority() == multiplayer.get_unique_id():
+		#Debug K to Kill
+		if Input.is_action_just_pressed("kill_player"):
+			takeDamage.rpc(multiplayer.get_unique_id())
 		# Handle shoot.
 		if Input.is_action_just_pressed("shoot") or $ShootCooldown.wait_time == .1:
 			if $ShootCooldown.is_stopped():
@@ -86,7 +96,8 @@ func spawnShell(spawnPOS: Vector2, spawnROT: float):
 				rpc("spawnShell", global_position + offset, current_angle)
 		powerData = null
 	
-	
+
+
 func apply_powerup(powerup: PowerupData):
 	powerData = powerup
 	# Health
@@ -109,8 +120,14 @@ func reset_base_stats():
 	$ShootCooldown.wait_time = .6
 	powerData = null
 	
-	
+
+@rpc("any_peer", "call_local", "reliable")
 func takeDamage(hitPlayerID: int):
+	# Flash while immune to damage
+	flashTween.play()
+	if !$DamageCooldown.is_stopped():
+		return
+	$DamageCooldown.start()
 	$DamageParticle.emitting = true
 	$Hearts.frame += 1
 	currentHealth -= 1
@@ -143,3 +160,8 @@ func restart():
 	$Hearts.frame = 0
 	currentScale = 1
 	global_scale = Vector2(currentScale, currentScale)
+
+
+func _on_damage_cooldown_timeout() -> void:
+	flashTween.pause()
+	modulate.a = 1.0

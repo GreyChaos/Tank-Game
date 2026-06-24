@@ -76,10 +76,16 @@ func StartGame(mapPath: String):
 	
 @rpc("any_peer", "call_local", "reliable")
 func ContinueGame(mapPath: String):
-	if currentScene != null:
-		currentScene.queue_free()
-	_on_start_timer_timeout()
 	mapChoice = mapPath
+	if is_instance_valid(currentScene):
+		for player in currentScene.get_children():
+			if player.has_node("MultiplayerSynchronizer"):
+				player.get_node("MultiplayerSynchronizer").public_visibility = false
+		currentScene.queue_free()
+		currentScene = null
+	await get_tree().process_frame
+	_on_start_timer_timeout()
+	
 
 
 func _on_start_button_down() -> void:
@@ -157,12 +163,15 @@ func _on_name_text_changed(new_text: String) -> void:
 
 
 func _on_start_timer_timeout() -> void:
-	if $Camera2D != null:
-		$Camera2D.queue_free()
+	var cam = get_node_or_null("Camera2D")
+	if is_instance_valid(cam):
+		cam.queue_free()
 	$Music.stop()
-	currentScene = load(mapChoice).instantiate()
-	get_tree().root.add_child(currentScene)
 	self.hide()
+	if multiplayer.is_server():
+		currentScene = load(mapChoice).instantiate()
+		currentScene.name = mapChoice.get_file().get_basename()
+		$MapContainer.add_child(currentScene)
 	
 func switchMaps(mapPath: String) -> void:
 	ContinueGame.rpc(mapPath)
