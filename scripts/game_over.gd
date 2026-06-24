@@ -24,6 +24,13 @@ func gameOver() -> void:
 
 
 func _on_restart_timer_timeout() -> void:
+	if multiplayer.is_server():
+		cleanup_data.rpc()
+		GameManager.switchMaps.emit(GameManager.MAPS[randi_range(0, GameManager.MAPS.size() - 1)])
+		
+
+@rpc("authority", "call_local", "reliable")
+func cleanup_data():
 	GameManager.cleanUpShells()
 	for powerup in GameManager.Powerups:
 		if powerup.spawnedSpot.hasItem:
@@ -37,5 +44,3 @@ func _on_restart_timer_timeout() -> void:
 	GameManager.DeadPlayers.clear()
 	for Player in GameManager.Players:
 		GameManager.Players[Player]["playerObject"].restart()
-	if multiplayer.is_server():
-		GameManager.switchMaps.emit(GameManager.MAPS[randi_range(0, GameManager.MAPS.size() - 1)])

@@ -2,12 +2,9 @@
 
 [ext_resource type="Script" uid="uid://bwki8lwrghqab" path="res://scenes/SceneManager.gd" id="1_an2rc"]
 [ext_resource type="PackedScene" uid="uid://ip6213vm7nec" path="res://scenes/player_tank.tscn" id="2_jl3j3"]
-[ext_resource type="Script" uid="uid://dqwvft355l6gf" path="res://scripts/powerups.gd" id="3_0jfrf"]
-[ext_resource type="Script" uid="uid://crq2knsyatp7m" path="res://scripts/powerupSpawnLocation.gd" id="4_briq8"]
+[ext_resource type="Script" uid="uid://dqwvft355l6gf" path="res://powerups/scripts/powerup_manager.gd" id="3_0jfrf"]
+[ext_resource type="Script" uid="uid://crq2knsyatp7m" path="res://powerups/scripts/powerupSpawnLocation.gd" id="4_briq8"]
 [ext_resource type="PackedScene" uid="uid://mlfce4cgsgyu" path="res://scenes/powerup.tscn" id="5_s0n5c"]
-[ext_resource type="Texture2D" uid="uid://tdfc1y1cfa6n" path="res://assets/sprites/shootfastPower.png" id="6_7b4kn"]
-[ext_resource type="Texture2D" uid="uid://ceah0832s026p" path="res://assets/sprites/speedPower.png" id="7_82fti"]
-[ext_resource type="Texture2D" uid="uid://c1ra64ufl1skg" path="res://assets/sprites/healthPower.png" id="8_krloe"]
 [ext_resource type="FontFile" uid="uid://c0egde7kcn03q" path="res://assets/fonts/BlackOpsOne-Regular.ttf" id="10_08glf"]
 [ext_resource type="Texture2D" uid="uid://bk23rj04n7vj7" path="res://assets/sprites/Background3.png" id="11_an2rc"]
 [ext_resource type="Script" uid="uid://cyo840s1uulwe" path="res://scripts/game_over.gd" id="11_rdlff"]
@@ -72,12 +69,10 @@ stream = SubResource("AudioStreamMP3_0jfrf")
 volume_db = -8.21
 autoplay = true
 
-[node name="Powerups" type="Node2D" parent="." unique_id=799264194 node_paths=PackedStringArray("SpeedPower", "FastShootPower", "HealthPower")]
+[node name="Powerups" type="Node2D" parent="." unique_id=799264194]
 position = Vector2(-10, 3)
 script = ExtResource("3_0jfrf")
-SpeedPower = NodePath("PowerupSpeed")
-FastShootPower = NodePath("PowerupShootSpeed")
-HealthPower = NodePath("HealthPower")
+powerup_scene = ExtResource("5_s0n5c")
 
 [node name="PowerupSpawnPoints" type="Node2D" parent="Powerups" unique_id=656083208]
 
@@ -112,24 +107,6 @@ script = ExtResource("4_briq8")
 [node name="powerupSpawn8" type="Node2D" parent="Powerups/PowerupSpawnPoints" unique_id=553400889 groups=["PowerSpawnPoint"]]
 position = Vector2(-174, 259)
 script = ExtResource("4_briq8")
-
-[node name="PowerupShootSpeed" parent="Powerups" unique_id=289027864 instance=ExtResource("5_s0n5c")]
-position = Vector2(738, -60)
-shootSpeed = 0.1
-length = 7.0
-texture = ExtResource("6_7b4kn")
-
-[node name="PowerupSpeed" parent="Powerups" unique_id=1299098128 instance=ExtResource("5_s0n5c")]
-position = Vector2(739, -32)
-length = 7.0
-moveSpeed = 150
-texture = ExtResource("7_82fti")
-
-[node name="HealthPower" parent="Powerups" unique_id=1116598867 instance=ExtResource("5_s0n5c")]
-position = Vector2(737, 6.999996)
-length = 0.5
-texture = ExtResource("8_krloe")
-healthChange = 1
 
 [node name="PowerupSpawnTimer" type="Timer" parent="Powerups" unique_id=1362087600]
 wait_time = 2.0
@@ -180,7 +157,7 @@ texture = ExtResource("12_jl3j3")
 script = ExtResource("13_jl3j3")
 
 [node name="Area2D" type="Area2D" parent="SandPit" unique_id=2090319017]
-collision_mask = 3
+collision_mask = 7
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="SandPit/Area2D" unique_id=323467401]
 position = Vector2(-1.8308634, 3.6617267)
@@ -190,6 +167,7 @@ shape = SubResource("CircleShape2D_v3n02")
 
 [node name="GameOver" type="RichTextLabel" parent="CanvasLayer" unique_id=1376510854]
 visible = false
+z_index = 1
 offset_left = 1.0
 offset_top = -15.0
 offset_right = 1152.0
@@ -204,6 +182,7 @@ PlayerScene = ExtResource("2_jl3j3")
 
 [node name="RestartText" type="RichTextLabel" parent="CanvasLayer" unique_id=1512786094]
 visible = false
+z_index = 1
 offset_left = 1.0
 offset_top = 87.0
 offset_right = 1152.0
@@ -217,6 +196,7 @@ script = ExtResource("11_rdlff")
 
 [node name="YouWin" type="RichTextLabel" parent="CanvasLayer" unique_id=1082465180]
 visible = false
+z_index = 1
 offset_left = 1.0
 offset_top = 407.0
 offset_right = 1152.0
@@ -229,6 +209,7 @@ vertical_alignment = 1
 
 [node name="YouLose" type="RichTextLabel" parent="CanvasLayer" unique_id=1769979782]
 visible = false
+z_index = 1
 offset_left = 1.0
 offset_top = 407.0
 offset_right = 1152.0

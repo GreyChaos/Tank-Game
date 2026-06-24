@@ -156,6 +156,14 @@ shape = SubResource("RectangleShape2D_v3n02")
 [node name="BulletSpawn" type="Node2D" parent="." unique_id=290902277]
 position = Vector2(0, -28)
 
+[node name="BulletSpawn2" type="Node2D" parent="." unique_id=209311449]
+position = Vector2(-4, -28)
+rotation = -0.44764718
+
+[node name="BulletSpawn3" type="Node2D" parent="." unique_id=2112492287]
+position = Vector2(4, -28)
+rotation = 0.4477515
+
 [node name="Name" type="RichTextLabel" parent="." unique_id=730658373]
 offset_left = -51.0
 offset_top = 27.0
@@ -165,6 +173,7 @@ text = "player"
 fit_content = true
 scroll_active = false
 horizontal_alignment = 1
+metadata/_edit_lock_ = true
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=285413992]
 replication_config = SubResource("SceneReplicationConfig_yuybd")

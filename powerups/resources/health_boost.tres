@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="PowerupData" format=3 uid="uid://y5ctugmcoi7h"]
+
+[ext_resource type="Script" uid="uid://bwxuv2lrc06uk" path="res://powerups/scripts/powerup_data.gd" id="1_pjapi"]
+[ext_resource type="Texture2D" uid="uid://c1ra64ufl1skg" path="res://powerups/sprites/healthPower.png" id="2_d6ab1"]
+
+[resource]
+script = ExtResource("1_pjapi")
+name = "Health Boost"
+length = 0.5
+texture = ExtResource("2_d6ab1")
+health_change = 1

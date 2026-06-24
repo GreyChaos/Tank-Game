@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="PowerupData" format=3 uid="uid://dht6p5u6st83"]
+
+[ext_resource type="Script" uid="uid://bwxuv2lrc06uk" path="res://powerups/scripts/powerup_data.gd" id="1_bs16y"]
+[ext_resource type="Texture2D" uid="uid://t1nwtnfome2i" path="res://powerups/sprites/bigShotPower.png" id="2_bajqk"]
+
+[resource]
+script = ExtResource("1_bs16y")
+name = "Big Shot"
+length = 10.0
+texture = ExtResource("2_bajqk")
+shell_speed = 100.0
+shell_scale = 5.0
+shell_immune = true
+fire_to_trigger = true
+use_timer = false

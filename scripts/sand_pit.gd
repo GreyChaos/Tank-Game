@@ -17,12 +17,15 @@ func _process(delta: float) -> void:
 func _on_area_2d_body_entered(body: Node2D) -> void:
 	if body is CharacterBody2D:
 		body.rotation += 180
+	if body.get_parent().is_in_group("shell"):
+		body.get_parent().rotation += 180
+	
 
 func on_reached_min_scale():
 	if multiplayer.is_server():
 		var newSpot = Vector2(randf_range(-500, 500), randf_range(-230, 270))
 		moveSpot.rpc(newSpot)
 
-@rpc("authority", "call_local")
+@rpc("authority", "call_local", "reliable")
 func moveSpot(newSpot: Vector2):
 	global_position = newSpot

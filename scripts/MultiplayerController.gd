@@ -46,7 +46,7 @@ func connection_failed():
 	print("Connection Failed")
 
 
-@rpc("any_peer")
+@rpc("any_peer", "reliable")
 func SendPlayerInfo(name, id):
 	GameManager.Players[id] = {
 		"name": name,
@@ -65,7 +65,7 @@ func SendPlayerInfo(name, id):
 			SendPlayerInfo.rpc(GameManager.Players[i].name, i)
 
 
-@rpc("any_peer", "call_local")
+@rpc("any_peer", "call_local", "reliable")
 func StartGame(mapPath: String):
 	if currentScene != null:
 		currentScene.queue_free()
@@ -74,7 +74,7 @@ func StartGame(mapPath: String):
 	mapChoice = mapPath
 	
 	
-@rpc("any_peer", "call_local")
+@rpc("any_peer", "call_local", "reliable")
 func ContinueGame(mapPath: String):
 	if currentScene != null:
 		currentScene.queue_free()

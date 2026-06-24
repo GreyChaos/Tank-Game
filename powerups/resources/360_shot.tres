@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="PowerupData" format=3 uid="uid://dvo2gd47kt25o"]
+
+[ext_resource type="Script" uid="uid://bwxuv2lrc06uk" path="res://powerups/scripts/powerup_data.gd" id="1_3v5pp"]
+[ext_resource type="Texture2D" uid="uid://81hamhhrd7di" path="res://powerups/sprites/360ShotPower.png" id="2_mqupf"]
+
+[resource]
+script = ExtResource("1_3v5pp")
+name = "360 Shot"
+length = 10.0
+texture = ExtResource("2_mqupf")
+fire_to_trigger = true
+use_timer = false
