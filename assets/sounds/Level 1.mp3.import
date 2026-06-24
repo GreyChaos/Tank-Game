@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://dq3ifkbi78xi6"
+path="res://.godot/imported/Level 1.mp3-63d39f15e64e23f8c376e14b3a9af17b.mp3str"
+
+[deps]
+
+source_file="res://assets/sounds/Level 1.mp3"
+dest_files=["res://.godot/imported/Level 1.mp3-63d39f15e64e23f8c376e14b3a9af17b.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

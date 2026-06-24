@@ -1,0 +1,33 @@
+[gd_scene format=3 uid="uid://mlfce4cgsgyu"]
+
+[ext_resource type="Script" uid="uid://jwcbx1ci63l1" path="res://scripts/powerup.gd" id="1_ih772"]
+[ext_resource type="AudioStream" uid="uid://dyyu27nupob6g" path="res://assets/sounds/powerUp.wav" id="3_406cw"]
+[ext_resource type="Texture2D" uid="uid://tdfc1y1cfa6n" path="res://assets/sprites/shootfastPower.png" id="3_pufsy"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_v3n02"]
+size = Vector2(16, 16)
+
+[node name="Powerup" type="Node2D" unique_id=289027864]
+scale = Vector2(2, 2)
+script = ExtResource("1_ih772")
+
+[node name="Area2D" type="Area2D" parent="." unique_id=1269737417]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=929664391]
+z_index = 1
+shape = SubResource("RectangleShape2D_v3n02")
+
+[node name="Timer" type="Timer" parent="." unique_id=113648462]
+one_shot = true
+
+[node name="PickupSound" type="AudioStreamPlayer2D" parent="." unique_id=1727645196]
+stream = ExtResource("3_406cw")
+volume_db = -8.541
+
+[node name="Texture" type="Sprite2D" parent="." unique_id=1025971434]
+z_index = 1
+scale = Vector2(0.7315977, 0.7315977)
+texture = ExtResource("3_pufsy")
+
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

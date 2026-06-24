@@ -1,0 +1,219 @@
+[gd_scene format=3 uid="uid://ip6213vm7nec"]
+
+[ext_resource type="Script" uid="uid://bemhyi06wprq0" path="res://scripts/player_tank.gd" id="1_yuybd"]
+[ext_resource type="Texture2D" uid="uid://dvw2xm661lm4p" path="res://assets/sprites/Tank1.png" id="2_xdl87"]
+[ext_resource type="Texture2D" uid="uid://dd7i63xi586pc" path="res://assets/sprites/Tank2.png" id="3_crs0q"]
+[ext_resource type="Texture2D" uid="uid://bg57tiod6udr1" path="res://assets/sprites/Tank3.png" id="4_gym88"]
+[ext_resource type="Texture2D" uid="uid://dfbpgeo8ctiuc" path="res://assets/sprites/Tank4.png" id="5_rhptn"]
+[ext_resource type="Texture2D" uid="uid://dx2wnfj4r2b38" path="res://assets/sprites/hearts.png" id="6_xdl87"]
+[ext_resource type="AudioStream" uid="uid://ic80v0wl4wn3" path="res://assets/sounds/hitHurt.wav" id="7_crs0q"]
+[ext_resource type="Texture2D" uid="uid://btdfyakf67706" path="res://assets/sprites/crown.png" id="8_gym88"]
+[ext_resource type="Script" uid="uid://c8kxdqu3qf34s" path="res://scripts/camera.gd" id="9_rhptn"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_v3n02"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_xdl87")
+}],
+"loop": 1,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_rhptn")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_gym88")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_crs0q")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_xdl87")
+}],
+"loop": 1,
+"name": &"moving_backward",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_xdl87")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_crs0q")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_gym88")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_rhptn")
+}],
+"loop": 1,
+"name": &"moving_foward",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_v3n02"]
+size = Vector2(50, 48)
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_yuybd"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath("Name:text")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+properties/3/path = NodePath("TankSprite:modulate")
+properties/3/spawn = true
+properties/3/replication_mode = 2
+properties/4/path = NodePath("TankSprite:animation")
+properties/4/spawn = true
+properties/4/replication_mode = 2
+properties/5/path = NodePath("Hat:visible")
+properties/5/spawn = true
+properties/5/replication_mode = 2
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_crs0q"]
+atlas = ExtResource("6_xdl87")
+region = Rect2(0, 0, 48, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gym88"]
+atlas = ExtResource("6_xdl87")
+region = Rect2(0, 16, 48, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rhptn"]
+atlas = ExtResource("6_xdl87")
+region = Rect2(0, 32, 48, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_n3826"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_crs0q")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gym88")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rhptn")
+}],
+"loop": 0,
+"name": &"Heath",
+"speed": 5.0
+}]
+
+[sub_resource type="Gradient" id="Gradient_crs0q"]
+offsets = PackedFloat32Array(0, 0.5344828, 0.74712646, 1)
+colors = PackedColorArray(1, 1, 1, 1, 0.5107427, 0.5107427, 0.5107427, 1, 0.31609195, 0.31609195, 0.31609195, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_gym88"]
+gradient = SubResource("Gradient_crs0q")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_crs0q"]
+particle_flag_disable_z = true
+emission_shape = 1
+emission_sphere_radius = 1.0
+inherit_velocity_ratio = 0.306
+direction = Vector3(0, 0, 0)
+spread = 114.729
+flatness = 0.126
+gravity = Vector3(10, 2, 10)
+radial_accel_min = 39.999996
+radial_accel_max = 49.999996
+color_ramp = SubResource("GradientTexture1D_gym88")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_gym88"]
+particle_flag_disable_z = true
+emission_shape = 1
+emission_sphere_radius = 1.0
+inherit_velocity_ratio = 0.306
+direction = Vector3(0, 0, 0)
+spread = 114.729
+flatness = 0.126
+gravity = Vector3(10, 2, 10)
+radial_accel_min = 39.999996
+radial_accel_max = 49.999996
+color_ramp = SubResource("GradientTexture1D_gym88")
+
+[node name="PlayerTank" type="CharacterBody2D" unique_id=1389244457]
+collision_layer = 3
+script = ExtResource("1_yuybd")
+
+[node name="TankSprite" type="AnimatedSprite2D" parent="." unique_id=979309965]
+sprite_frames = SubResource("SpriteFrames_v3n02")
+animation = &"idle"
+autoplay = "idle"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1026310074]
+position = Vector2(0, 8)
+shape = SubResource("RectangleShape2D_v3n02")
+
+[node name="BulletSpawn" type="Node2D" parent="." unique_id=290902277]
+position = Vector2(0, -28)
+
+[node name="Name" type="RichTextLabel" parent="." unique_id=730658373]
+offset_left = -51.0
+offset_top = 27.0
+offset_right = 52.0
+offset_bottom = 57.0
+text = "player"
+fit_content = true
+scroll_active = false
+horizontal_alignment = 1
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=285413992]
+replication_config = SubResource("SceneReplicationConfig_yuybd")
+
+[node name="Hearts" type="AnimatedSprite2D" parent="." unique_id=1412014967]
+position = Vector2(-2, 56)
+sprite_frames = SubResource("SpriteFrames_n3826")
+animation = &"Heath"
+
+[node name="hitSound" type="AudioStreamPlayer2D" parent="." unique_id=1121240527]
+stream = ExtResource("7_crs0q")
+
+[node name="ShootCooldown" type="Timer" parent="." unique_id=1493871430]
+wait_time = 0.6
+one_shot = true
+
+[node name="ShootParticle" type="GPUParticles2D" parent="." unique_id=1274179432]
+position = Vector2(0, -30)
+scale = Vector2(5.1257343, 4.7203484)
+emitting = false
+amount = 45
+lifetime = 0.21
+one_shot = true
+trail_enabled = true
+trail_lifetime = 0.1
+process_material = SubResource("ParticleProcessMaterial_crs0q")
+
+[node name="DamageParticle" type="GPUParticles2D" parent="." unique_id=1642008005]
+z_index = 2
+position = Vector2(0, 7.999996)
+scale = Vector2(28.763985, 26.489086)
+emitting = false
+amount = 100
+lifetime = 0.5
+one_shot = true
+trail_enabled = true
+trail_lifetime = 0.1
+process_material = SubResource("ParticleProcessMaterial_gym88")
+
+[node name="Hat" type="Sprite2D" parent="." unique_id=223527135]
+visible = false
+z_index = 1
+position = Vector2(0, 1)
+scale = Vector2(1.1875, 1.1875)
+texture = ExtResource("8_gym88")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1920670303]
+limit_left = -576
+limit_top = -324
+limit_right = 576
+limit_bottom = 324
+script = ExtResource("9_rhptn")
