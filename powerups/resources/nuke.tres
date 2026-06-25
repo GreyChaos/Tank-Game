@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="PowerupData" format=3 uid="uid://bs2rm0yvqx105"]
+
+[ext_resource type="Script" uid="uid://bwxuv2lrc06uk" path="res://powerups/scripts/powerup_data.gd" id="1_8gatn"]
+[ext_resource type="Texture2D" uid="uid://dnqukuhblwe80" path="res://powerups/sprites/nuke.png" id="2_8gatn"]
+
+[resource]
+script = ExtResource("1_8gatn")
+name = "Nuke"
+length = 10.0
+texture = ExtResource("2_8gatn")
+fire_to_trigger = true
+use_timer = false
+damage_shooter = true

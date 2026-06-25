@@ -145,6 +145,7 @@ collision_layer = 3
 script = ExtResource("1_yuybd")
 
 [node name="TankSprite" type="AnimatedSprite2D" parent="." unique_id=979309965]
+z_index = 2
 sprite_frames = SubResource("SpriteFrames_v3n02")
 animation = &"idle"
 autoplay = "idle"
@@ -228,7 +229,7 @@ limit_bottom = 324
 script = ExtResource("9_rhptn")
 
 [node name="DamageCooldown" type="Timer" parent="." unique_id=1394408055]
-wait_time = 2.0
+wait_time = 1.6999999999999997
 one_shot = true
 
 [connection signal="timeout" from="DamageCooldown" to="." method="_on_damage_cooldown_timeout"]

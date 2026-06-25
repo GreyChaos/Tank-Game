@@ -1,0 +1,157 @@
+[gd_scene format=3 uid="uid://drmyjugr4qjh3"]
+
+[ext_resource type="Texture2D" uid="uid://d1lgne4er7lsl" path="res://powerups/sprites/nukemark.png" id="1_6m24o"]
+[ext_resource type="Script" uid="uid://bd7f0re4v3cw0" path="res://scripts/fired_nuke.gd" id="1_r67su"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_guwko"]
+atlas = ExtResource("1_6m24o")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xoswo"]
+atlas = ExtResource("1_6m24o")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4wgq8"]
+atlas = ExtResource("1_6m24o")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6eo0j"]
+atlas = ExtResource("1_6m24o")
+region = Rect2(96, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dbwb8"]
+atlas = ExtResource("1_6m24o")
+region = Rect2(128, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_oqd40"]
+atlas = ExtResource("1_6m24o")
+region = Rect2(160, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dfe4m"]
+atlas = ExtResource("1_6m24o")
+region = Rect2(192, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dhgak"]
+atlas = ExtResource("1_6m24o")
+region = Rect2(224, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1i1cw"]
+atlas = ExtResource("1_6m24o")
+region = Rect2(256, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jh021"]
+atlas = ExtResource("1_6m24o")
+region = Rect2(288, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_v3n02"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_guwko")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xoswo")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4wgq8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6eo0j")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dbwb8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_oqd40")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dfe4m")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dhgak")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1i1cw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jh021")
+}],
+"loop": 0,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="Gradient" id="Gradient_r67su"]
+offsets = PackedFloat32Array(0.44585988, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_4tcor"]
+gradient = SubResource("Gradient_r67su")
+
+[sub_resource type="Curve" id="Curve_guwko"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_n3826"]
+curve = SubResource("Curve_guwko")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_v3n02"]
+lifetime_randomness = 0.5
+particle_flag_disable_z = true
+spread = 180.0
+initial_velocity_min = 100.0
+initial_velocity_max = 500.0
+gravity = Vector3(0, 0, 0)
+scale_min = 20.0
+scale_max = 30.0
+scale_curve = SubResource("CurveTexture_n3826")
+color = Color(0.54509807, 0, 0, 1)
+color_ramp = SubResource("GradientTexture1D_4tcor")
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_v3n02"]
+radius = 48.010414
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_r67su"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath("Falling Timer:wait_time")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath("Cleanup Timer:wait_time")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+
+[node name="FiredNuke" type="Node2D" unique_id=1559566802]
+script = ExtResource("1_r67su")
+
+[node name="Nukemark" type="AnimatedSprite2D" parent="." unique_id=262438513]
+position = Vector2(3.0517578e-05, 7.6293945e-06)
+scale = Vector2(2.5, 2.5)
+sprite_frames = SubResource("SpriteFrames_v3n02")
+
+[node name="Falling Timer" type="Timer" parent="." unique_id=1685113904]
+one_shot = true
+
+[node name="Cleanup Timer" type="Timer" parent="." unique_id=1987518905]
+wait_time = 6.0
+one_shot = true
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="." unique_id=1505580026]
+emitting = false
+amount = 50
+one_shot = true
+explosiveness = 1.0
+randomness = 0.5
+process_material = SubResource("ParticleProcessMaterial_v3n02")
+
+[node name="Damage" type="Area2D" parent="." unique_id=1479009831]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Damage" unique_id=1075597814]
+shape = SubResource("CircleShape2D_v3n02")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1148012620]
+replication_config = SubResource("SceneReplicationConfig_r67su")
+
+[connection signal="timeout" from="Falling Timer" to="." method="_on_falling_timer_timeout"]
+[connection signal="timeout" from="Cleanup Timer" to="." method="_on_cleanup_timer_timeout"]

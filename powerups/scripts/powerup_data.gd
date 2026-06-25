@@ -12,3 +12,4 @@ class_name PowerupData
 @export var shell_immune: bool = false
 @export var fire_to_trigger = false
 @export var use_timer = true
+@export var damage_shooter = false

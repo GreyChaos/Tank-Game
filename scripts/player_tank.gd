@@ -2,7 +2,7 @@ extends CharacterBody2D
 
 
 var SPEED = 75.0
-var ROTATESPEED = 75.0 / 5
+var ROTATESPEED = 75.0 / 3
 const SHELLSCENE = preload("res://scenes/shell.tscn")
 var currentHealth = 3
 var maxHealth = 3
@@ -12,6 +12,7 @@ var powerData : PowerupData = null
 var cameraSetup = false
 var next_shot_power = false
 var flashTween
+const FIRED_NUKE = preload("res://scenes/fired_nuke.tscn")
 @onready var camera = $Camera2D
 
 func _ready() -> void:
@@ -42,7 +43,7 @@ func _physics_process(delta: float) -> void:
 	if $MultiplayerSynchronizer.get_multiplayer_authority() == multiplayer.get_unique_id():
 		#Debug K to Kill
 		if Input.is_action_just_pressed("kill_player"):
-			takeDamage.rpc(multiplayer.get_unique_id())
+			takeDamage.rpc(multiplayer.get_unique_id(), 1)
 		# Handle shoot.
 		if Input.is_action_just_pressed("shoot") or $ShootCooldown.wait_time == .1:
 			if $ShootCooldown.is_stopped():
@@ -71,19 +72,25 @@ func _physics_process(delta: float) -> void:
 
 @rpc("any_peer", "call_local", "reliable")
 func spawnShell(spawnPOS: Vector2, spawnROT: float):
-	var shell = SHELLSCENE.instantiate()
-	shell.position = spawnPOS
-	shell.rotation = spawnROT
-	shell.fired_by = self
-	$ShootParticle.emitting = true
-	get_parent().add_child(shell)
 	if next_shot_power:
 		next_shot_power = false
+		if powerData.name == "Nuke":
+			for i in range(15):
+				var nuke = FIRED_NUKE.instantiate()
+				nuke.position = Vector2(randi_range(-576, 576), randi_range(-324, 324))
+				get_parent().add_child(nuke)
 		if powerData.name == "Big Shot":
+			var shell = SHELLSCENE.instantiate()
+			shell.position = spawnPOS
+			shell.rotation = spawnROT
+			shell.fired_by = self
+			$ShootParticle.emitting = true
 			shell.scale *= powerData.shell_scale
 			shell.speed = powerData.shell_speed
 			shell.immune_to_objects = powerData.shell_immune
+			get_parent().add_child(shell)
 		if powerData.name == "Triple Shot":
+			rpc("spawnShell", $BulletSpawn.global_position, $BulletSpawn.global_rotation)
 			rpc("spawnShell", $BulletSpawn2.global_position, $BulletSpawn2.global_rotation)
 			rpc("spawnShell", $BulletSpawn3.global_position, $BulletSpawn3.global_rotation)
 		if powerData.name == "360 Shot":
@@ -95,7 +102,13 @@ func spawnShell(spawnPOS: Vector2, spawnROT: float):
 				var offset = Vector2(cos(current_angle), sin(current_angle)) * radius
 				rpc("spawnShell", global_position + offset, current_angle)
 		powerData = null
-	
+	else:
+		var shell = SHELLSCENE.instantiate()
+		shell.position = spawnPOS
+		shell.rotation = spawnROT
+		shell.fired_by = self
+		$ShootParticle.emitting = true
+		get_parent().add_child(shell)
 
 
 func apply_powerup(powerup: PowerupData):
@@ -116,23 +129,23 @@ func apply_powerup(powerup: PowerupData):
 	
 func reset_base_stats():
 	SPEED = 75.0
-	ROTATESPEED = 75.0 / 5
+	ROTATESPEED = 75.0 / 3
 	$ShootCooldown.wait_time = .6
 	powerData = null
 	
 
 @rpc("any_peer", "call_local", "reliable")
-func takeDamage(hitPlayerID: int):
+func takeDamage(hitPlayerID: int, damageAmount: int):
 	# Flash while immune to damage
 	flashTween.play()
 	if !$DamageCooldown.is_stopped():
 		return
 	$DamageCooldown.start()
 	$DamageParticle.emitting = true
-	$Hearts.frame += 1
-	currentHealth -= 1
+	$Hearts.frame += damageAmount
+	currentHealth -= damageAmount
 	$hitSound.play()
-	if currentHealth == 0:
+	if currentHealth <= 0:
 		GameManager.playerDied(GameManager.Players[hitPlayerID].id)
 		visible = false
 		set_physics_process(false)

@@ -1,6 +1,6 @@
 extends Node2D
 
-var data: PowerupData = load("res://powerups/resources/health_boost.tres")
+var data: PowerupData = load("res://powerups/resources/nuke.tres")
 var spawnedSpot
 var playerAffected
 var pickedUp = false
