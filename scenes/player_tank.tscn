@@ -140,8 +140,11 @@ radial_accel_min = 39.999996
 radial_accel_max = 49.999996
 color_ramp = SubResource("GradientTexture1D_gym88")
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_n3826"]
+
 [node name="PlayerTank" type="CharacterBody2D" unique_id=1389244457]
 collision_layer = 3
+collision_mask = 9
 script = ExtResource("1_yuybd")
 
 [node name="TankSprite" type="AnimatedSprite2D" parent="." unique_id=979309965]
@@ -229,7 +232,15 @@ limit_bottom = 324
 script = ExtResource("9_rhptn")
 
 [node name="DamageCooldown" type="Timer" parent="." unique_id=1394408055]
-wait_time = 1.6999999999999997
+wait_time = 1.6999999999999995
 one_shot = true
+
+[node name="DestoryIfSink" type="Area2D" parent="." unique_id=873910779]
+collision_layer = 8
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DestoryIfSink" unique_id=264494842]
+position = Vector2(0, 8)
+shape = SubResource("RectangleShape2D_n3826")
 
 [connection signal="timeout" from="DamageCooldown" to="." method="_on_damage_cooldown_timeout"]

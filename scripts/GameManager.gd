@@ -1,6 +1,6 @@
 extends Node
 
-const MAPS = ["res://scenes/map_1.tscn", "res://scenes/map_2.tscn", "res://scenes/map_3.tscn", "res://scenes/map_4.tscn"]
+const MAPS = ["res://scenes/map_1.tscn", "res://scenes/map_2.tscn", "res://scenes/map_3.tscn", "res://scenes/map_4.tscn", "res://scenes/map_5.tscn"]
 var Players = {}
 var DeadPlayers = []
 signal gameOver

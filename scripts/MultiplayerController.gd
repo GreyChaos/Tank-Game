@@ -147,6 +147,12 @@ func _on_map_4_button_down() -> void:
 	mapChoice = GameManager.MAPS[3]
 	$HostScreen/MapSelected.global_position = $HostScreen/Map4.global_position
 	
+	
+func _on_map_5_button_down() -> void:
+	mapChoice = GameManager.MAPS[4]
+	$HostScreen/MapSelected.global_position = $HostScreen/Map5.global_position
+
+	
 func _on_settings_button_down() -> void:
 	$StartScreen/Settings.text = "Coming Soon!"
 
