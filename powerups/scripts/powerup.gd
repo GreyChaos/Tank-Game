@@ -1,6 +1,6 @@
 extends Node2D
 
-var data: PowerupData = load("res://powerups/resources/nuke.tres")
+@export var data: PowerupData
 var spawnedSpot
 var playerAffected
 var pickedUp = false

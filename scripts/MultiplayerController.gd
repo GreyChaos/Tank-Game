@@ -16,8 +16,7 @@ func _ready() -> void:
 	multiplayer.connected_to_server.connect(connected_to_server)
 	multiplayer.connection_failed.connect(connection_failed)
 	GameManager.switchMaps.connect(switchMaps)
-
-	pass # Replace with function body.
+	load_player_settings()
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -38,7 +37,7 @@ func peer_disconnected(id):
 # Client
 func connected_to_server():
 	print("Connected")
-	SendPlayerInfo.rpc_id(1, $JoinScreen/Name.text, multiplayer.get_unique_id())
+	SendPlayerInfo.rpc_id(1, $CustomizeScreen/CustomizeMenu/Name.text, multiplayer.get_unique_id(), $CustomizeScreen/CustomizeMenu/Tank1.modulate)
 
 
 # Client
@@ -47,13 +46,13 @@ func connection_failed():
 
 
 @rpc("any_peer", "reliable")
-func SendPlayerInfo(name, id):
+func SendPlayerInfo(name, id, custom_color: Color):
 	GameManager.Players[id] = {
 		"name": name,
 		"id": id,
 		"wasWinner": false,
 		"playerObject": null,
-		"color": Color(randf(), randf(), randf()),
+		"color": custom_color,
 		"hat": 0
 	}
 	var listText = "Players"
@@ -63,7 +62,7 @@ func SendPlayerInfo(name, id):
 
 	if multiplayer.is_server():
 		for i in GameManager.Players:
-			SendPlayerInfo.rpc(GameManager.Players[i].name, i)
+			SendPlayerInfo.rpc(GameManager.Players[i].name, i, GameManager.Players[i].color)
 
 
 @rpc("any_peer", "call_local", "reliable")
@@ -98,7 +97,7 @@ func _on_join_button_down() -> void:
 	peer.create_client($JoinScreen/Server.text, port)
 	peer.get_host().compress(ENetConnection.COMPRESS_RANGE_CODER)
 	multiplayer.set_multiplayer_peer(peer)
-
+	save_player_settings()
 	$"Player List".visible = true
 	$JoinScreen/Server.editable = false
 	$JoinScreen/Join.visible = false
@@ -115,7 +114,7 @@ func _on_host_button_down() -> void:
 	peer.get_host().compress(ENetConnection.COMPRESS_RANGE_CODER)
 	multiplayer.set_multiplayer_peer(peer)
 
-	SendPlayerInfo($HostScreen/Name.text, multiplayer.get_unique_id())
+	SendPlayerInfo($CustomizeScreen/CustomizeMenu/Name.text, multiplayer.get_unique_id(), $CustomizeScreen/CustomizeMenu/Tank1.modulate)
 
 	$"Player List".visible = true
 	$HostScreen/Start.visible = true
@@ -163,10 +162,11 @@ func _on_exit_button_down() -> void:
 
 
 func _on_name_text_changed(new_text: String) -> void:
+	save_player_settings()
 	if multiplayer.is_server():
-		SendPlayerInfo(new_text, multiplayer.get_unique_id())
+		SendPlayerInfo(new_text, multiplayer.get_unique_id(), $CustomizeScreen/CustomizeMenu/Tank1.modulate)
 	else:
-		SendPlayerInfo.rpc_id(1, new_text, multiplayer.get_unique_id())
+		SendPlayerInfo.rpc_id(1, new_text, multiplayer.get_unique_id(), $CustomizeScreen/CustomizeMenu/Tank1.modulate)
 
 
 func _on_start_timer_timeout() -> void:
@@ -182,3 +182,38 @@ func _on_start_timer_timeout() -> void:
 	
 func switchMaps(mapPath: String) -> void:
 	ContinueGame.rpc(mapPath)
+
+
+func _on_customize_menu_button_down() -> void:
+	$CustomizeScreen/CustomizeMenu/ColorPicker.visible = !$CustomizeScreen/CustomizeMenu/ColorPicker.is_visible_in_tree()
+
+func _on_color_picker_color_changed(color: Color) -> void:
+	save_player_settings()
+	if multiplayer.is_server():
+		SendPlayerInfo($CustomizeScreen/CustomizeMenu/Name.text, multiplayer.get_unique_id(), color)
+	else:
+		SendPlayerInfo.rpc_id(1, $CustomizeScreen/CustomizeMenu/Name.text, multiplayer.get_unique_id(), color)
+	$CustomizeScreen/CustomizeMenu/Tank1.modulate = color
+	
+func save_player_settings():
+	var config = ConfigFile.new()
+	# Values Saved
+	config.set_value("player", "name", $CustomizeScreen/CustomizeMenu/Name.text)
+	config.set_value("player", "color", $CustomizeScreen/CustomizeMenu/Tank1.modulate.to_html())
+	config.set_value("server", "last connected", $JoinScreen/Server.text)
+
+	config.save("user://settings.cfg")
+	
+func load_player_settings():
+	var config = ConfigFile.new()
+	var err = config.load("user://settings.cfg")
+	if err == OK:
+		# Load name
+		var saved_name = config.get_value("player", "name", "Default Name")
+		$CustomizeScreen/CustomizeMenu/Name.text = saved_name
+		# Load color
+		var saved_color_hex = config.get_value("player", "color", "#ffffff")
+		$CustomizeScreen/CustomizeMenu/Tank1.modulate = Color.html(saved_color_hex)
+		# Load last IP
+		var last_ip =  config.get_value("server", "last connected", "127.0.0.1")
+		$JoinScreen/Server.text = last_ip
