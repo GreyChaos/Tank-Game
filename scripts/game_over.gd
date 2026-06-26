@@ -19,6 +19,7 @@ func gameOver() -> void:
 		GameManager.Players[multiplayer.get_unique_id()].wasWinner = false
 	else:
 		$"../YouWin".visible = true
+		GameManager.Players[multiplayer.get_unique_id()].hat = $"../..".winning_hat
 		GameManager.Players[multiplayer.get_unique_id()].playerObject.winner()
 		GameManager.Players[multiplayer.get_unique_id()].wasWinner = true
 

@@ -1,0 +1,43 @@
+[gd_scene format=3 uid="uid://bn3ve110vy823"]
+
+[ext_resource type="Texture2D" uid="uid://dr8wqmdbbsie8" path="res://assets/sprites/penguin.png" id="1_ghsx3"]
+[ext_resource type="Script" uid="uid://bsxhfsd6tij1b" path="res://scripts/penguin.gd" id="2_o7lby"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_v3n02"]
+size = Vector2(25.604198, 28.452887)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_b6iir"]
+size = Vector2(25.604198, 28.452887)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_lfb5m"]
+size = Vector2(50.54192, 28.452887)
+
+[node name="Penguin" type="Sprite2D" unique_id=1134723458]
+rotation = 1.8461168
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("1_ghsx3")
+script = ExtResource("2_o7lby")
+
+[node name="IceBreakingArea" type="Area2D" parent="." unique_id=1479638698]
+collision_layer = 8
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="IceBreakingArea" unique_id=92354665]
+position = Vector2(-0.2935444, 6.3177395)
+shape = SubResource("RectangleShape2D_v3n02")
+
+[node name="Shot By Player" type="Area2D" parent="." unique_id=1521069031]
+collision_layer = 4
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Shot By Player" unique_id=421608218]
+position = Vector2(-0.2935444, 6.3177395)
+shape = SubResource("RectangleShape2D_b6iir")
+
+[node name="Collision" type="Area2D" parent="." unique_id=29181972]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Collision" unique_id=1425827595]
+position = Vector2(-0.8372549, 4.393063)
+shape = SubResource("RectangleShape2D_lfb5m")
+
+[connection signal="body_entered" from="Shot By Player" to="." method="_on_shot_by_player_body_entered"]

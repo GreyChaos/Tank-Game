@@ -7,8 +7,11 @@
 [ext_resource type="Texture2D" uid="uid://dfbpgeo8ctiuc" path="res://assets/sprites/Tank4.png" id="5_rhptn"]
 [ext_resource type="Texture2D" uid="uid://dx2wnfj4r2b38" path="res://assets/sprites/hearts.png" id="6_xdl87"]
 [ext_resource type="AudioStream" uid="uid://ic80v0wl4wn3" path="res://assets/sounds/hitHurt.wav" id="7_crs0q"]
-[ext_resource type="Texture2D" uid="uid://btdfyakf67706" path="res://assets/sprites/crown.png" id="8_gym88"]
+[ext_resource type="Texture2D" uid="uid://btdfyakf67706" path="res://assets/sprites/Hats/map3_hat.png" id="8_gym88"]
+[ext_resource type="Texture2D" uid="uid://b8tmybgboehiw" path="res://assets/sprites/Hats/map1_hat.png" id="8_utbjn"]
 [ext_resource type="Script" uid="uid://c8kxdqu3qf34s" path="res://scripts/camera.gd" id="9_rhptn"]
+[ext_resource type="Texture2D" uid="uid://binc56nicxmf3" path="res://assets/sprites/Hats/map2_hat.png" id="9_xjyf6"]
+[ext_resource type="Texture2D" uid="uid://clgrjl6hqlp86" path="res://assets/sprites/Hats/map5_hat.png" id="11_5c4u7"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_v3n02"]
 animations = [{
@@ -77,6 +80,9 @@ properties/4/replication_mode = 2
 properties/5/path = NodePath("Hat:visible")
 properties/5/spawn = true
 properties/5/replication_mode = 2
+properties/6/path = NodePath("Hat:frame")
+properties/6/spawn = true
+properties/6/replication_mode = 1
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_crs0q"]
 atlas = ExtResource("6_xdl87")
@@ -140,7 +146,57 @@ radial_accel_min = 39.999996
 radial_accel_max = 49.999996
 color_ramp = SubResource("GradientTexture1D_gym88")
 
+[sub_resource type="SpriteFrames" id="SpriteFrames_4tcor"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("8_utbjn")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_xjyf6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_gym88")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_utbjn")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_5c4u7")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 5.0
+}]
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_n3826"]
+
+[sub_resource type="Gradient" id="Gradient_utbjn"]
+offsets = PackedFloat32Array(0.44585988, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_4tcor"]
+gradient = SubResource("Gradient_utbjn")
+
+[sub_resource type="Curve" id="Curve_xjyf6"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_n3826"]
+curve = SubResource("Curve_xjyf6")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_5c4u7"]
+lifetime_randomness = 0.5
+particle_flag_disable_z = true
+spread = 180.0
+initial_velocity_min = 100.0
+initial_velocity_max = 500.0
+gravity = Vector3(0, 0, 0)
+scale_min = 20.0
+scale_max = 30.0
+scale_curve = SubResource("CurveTexture_n3826")
+color = Color(0.5953306, 0.84631693, 0.9641729, 1)
+color_ramp = SubResource("GradientTexture1D_4tcor")
 
 [node name="PlayerTank" type="CharacterBody2D" unique_id=1389244457]
 collision_layer = 3
@@ -173,6 +229,8 @@ offset_left = -51.0
 offset_top = 27.0
 offset_right = 52.0
 offset_bottom = 57.0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
 text = "player"
 fit_content = true
 scroll_active = false
@@ -217,12 +275,14 @@ trail_enabled = true
 trail_lifetime = 0.1
 process_material = SubResource("ParticleProcessMaterial_gym88")
 
-[node name="Hat" type="Sprite2D" parent="." unique_id=223527135]
+[node name="Hat" type="AnimatedSprite2D" parent="." unique_id=1048706548]
 visible = false
-z_index = 1
-position = Vector2(0, 1)
-scale = Vector2(1.1875, 1.1875)
-texture = ExtResource("8_gym88")
+z_index = 2
+position = Vector2(0.405, 7.475)
+scale = Vector2(1.4, 1.4)
+sprite_frames = SubResource("SpriteFrames_4tcor")
+frame = 4
+frame_progress = 0.8415886
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1920670303]
 limit_left = -576
@@ -242,5 +302,13 @@ collision_mask = 0
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DestoryIfSink" unique_id=264494842]
 position = Vector2(0, 8)
 shape = SubResource("RectangleShape2D_n3826")
+
+[node name="PowerupPartical" type="GPUParticles2D" parent="." unique_id=2130192288]
+emitting = false
+amount = 10
+one_shot = true
+explosiveness = 1.0
+randomness = 0.5
+process_material = SubResource("ParticleProcessMaterial_5c4u7")
 
 [connection signal="timeout" from="DamageCooldown" to="." method="_on_damage_cooldown_timeout"]

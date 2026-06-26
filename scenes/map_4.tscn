@@ -17,6 +17,7 @@ loop = true
 script = ExtResource("1_imjx3")
 PlayerScene = ExtResource("2_nasj0")
 CameraSize = Vector2(1152, 648)
+winning_hat = 3
 
 [node name="Background" type="Node2D" parent="." unique_id=1272109404]
 scale = Vector2(2, 2)

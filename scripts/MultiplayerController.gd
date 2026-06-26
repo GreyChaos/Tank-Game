@@ -53,7 +53,8 @@ func SendPlayerInfo(name, id):
 		"id": id,
 		"wasWinner": false,
 		"playerObject": null,
-		"color": Color(randf(), randf(), randf())
+		"color": Color(randf(), randf(), randf()),
+		"hat": 0
 	}
 	var listText = "Players"
 	for player in GameManager.Players:

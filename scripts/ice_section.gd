@@ -24,6 +24,9 @@ func crack_ice():
 		$"..".current_breaking_ice_index = null
 		$Mask/Texture.frame += 1
 		for body in $Area2D.get_overlapping_areas():
-			body.get_parent().takeDamage(str(body.get_parent().name).to_int(), 10)
+			if body.get_parent() is CharacterBody2D:
+				body.get_parent().takeDamage(str(body.get_parent().name).to_int(), 10)
+			else:
+				body.get_parent().queue_free()
 	else:
 		$Mask/Texture.frame += 1

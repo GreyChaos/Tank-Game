@@ -43,7 +43,7 @@ func _physics_process(delta: float) -> void:
 	if $MultiplayerSynchronizer.get_multiplayer_authority() == multiplayer.get_unique_id():
 		#Debug K to Kill
 		if Input.is_action_just_pressed("kill_player"):
-			takeDamage.rpc(multiplayer.get_unique_id(), 1)
+			takeDamage.rpc(multiplayer.get_unique_id(), 3)
 		# Handle shoot.
 		if Input.is_action_just_pressed("shoot") or $ShootCooldown.wait_time == .1:
 			if $ShootCooldown.is_stopped():
@@ -112,6 +112,7 @@ func spawnShell(spawnPOS: Vector2, spawnROT: float):
 
 
 func apply_powerup(powerup: PowerupData):
+	$PowerupPartical.emitting = true
 	powerData = powerup
 	# Health
 	if powerup.health_change > 0 and currentHealth < maxHealth:
@@ -156,6 +157,7 @@ func takeDamage(hitPlayerID: int, damageAmount: int):
 		
 		
 func winner():
+	$Hat.frame = GameManager.Players[multiplayer.get_unique_id()].hat
 	$Hat.visible = true
 	
 	

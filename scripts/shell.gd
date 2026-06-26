@@ -1,4 +1,5 @@
 extends Node2D
+class_name shell
 
 var speed = 200.0
 var immune_to_objects = false
