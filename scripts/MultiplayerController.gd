@@ -101,7 +101,7 @@ func _on_join_button_down() -> void:
 	$"Player List".visible = true
 	$JoinScreen/Server.editable = false
 	$JoinScreen/Join.visible = false
-
+	$JoinScreen/Back.visible = false
 
 func _on_host_button_down() -> void:
 	peer = ENetMultiplayerPeer.new()
@@ -119,7 +119,7 @@ func _on_host_button_down() -> void:
 	$"Player List".visible = true
 	$HostScreen/Start.visible = true
 	$HostScreen/Host.visible = false
-
+	$HostScreen/Back.visible = false
 
 func _on_join_menu_button_down() -> void:
 	$StartScreen.visible = false
@@ -154,7 +154,8 @@ func _on_map_5_button_down() -> void:
 
 	
 func _on_settings_button_down() -> void:
-	$StartScreen/Settings.text = "Coming Soon!"
+	$StartScreen.visible = false
+	$SettingsScreen.visible = true
 
 
 func _on_exit_button_down() -> void:
@@ -201,6 +202,8 @@ func save_player_settings():
 	config.set_value("player", "name", $CustomizeScreen/CustomizeMenu/Name.text)
 	config.set_value("player", "color", $CustomizeScreen/CustomizeMenu/Tank1.modulate.to_html())
 	config.set_value("server", "last connected", $JoinScreen/Server.text)
+	config.set_value("audio", "master", $"SettingsScreen/MasterVolume/Master Volume".value)
+	config.set_value("setting", "fullscreen", DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN)
 
 	config.save("user://settings.cfg")
 	
@@ -217,3 +220,32 @@ func load_player_settings():
 		# Load last IP
 		var last_ip =  config.get_value("server", "last connected", "127.0.0.1")
 		$JoinScreen/Server.text = last_ip
+		# Load Volume
+		var saved_master_volume =  config.get_value("audio", "master", "0")
+		$"SettingsScreen/MasterVolume/Master Volume".value = float(saved_master_volume)
+		# Load Fullscreen
+		var saved_fullscreen =  config.get_value("setting", "fullscreen", false)
+		if saved_fullscreen:
+			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN)
+			DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_BORDERLESS, true)
+
+func _on_back_button_down() -> void:
+	$StartScreen.visible = true
+	$JoinScreen.visible = false
+	$HostScreen.visible = false
+	$SettingsScreen.visible = false
+
+
+func _on_h_slider_value_changed(value: float) -> void:
+	save_player_settings()
+	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Master"), value)
+
+
+func _on_toggle_fullscreen_button_down() -> void:
+	if DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN:
+		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
+		DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_BORDERLESS, false)
+	else:
+		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN)
+		DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_BORDERLESS, true)
+	save_player_settings()
