@@ -85,14 +85,14 @@ animations = [{
 offsets = PackedFloat32Array(0.44585988, 1)
 colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
 
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_4tcor"]
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_xoswo"]
 gradient = SubResource("Gradient_r67su")
 
 [sub_resource type="Curve" id="Curve_guwko"]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
 point_count = 2
 
-[sub_resource type="CurveTexture" id="CurveTexture_n3826"]
+[sub_resource type="CurveTexture" id="CurveTexture_4wgq8"]
 curve = SubResource("Curve_guwko")
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_v3n02"]
@@ -104,9 +104,9 @@ initial_velocity_max = 500.0
 gravity = Vector3(0, 0, 0)
 scale_min = 20.0
 scale_max = 30.0
-scale_curve = SubResource("CurveTexture_n3826")
+scale_curve = SubResource("CurveTexture_4wgq8")
 color = Color(0.54509807, 0, 0, 1)
-color_ramp = SubResource("GradientTexture1D_4tcor")
+color_ramp = SubResource("GradientTexture1D_xoswo")
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_v3n02"]
 radius = 48.010414

@@ -276,7 +276,7 @@ _spawnable_scenes = PackedStringArray("uid://ip6213vm7nec", "uid://drmyjugr4qjh3
 spawn_path = NodePath("../PlayersContainer")
 
 [node name="RainingNukes" type="Timer" parent="." unique_id=769911514]
-wait_time = 0.5
+wait_time = 0.25
 autostart = true
 script = ExtResource("11_imjx3")
 

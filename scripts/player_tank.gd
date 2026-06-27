@@ -87,7 +87,7 @@ func spawnShell(spawnPOS: Vector2, spawnROT: float):
 	if next_shot_power:
 		next_shot_power = false
 		if powerData.name == "Nuke":
-			for i in range(15):
+			for i in range(25):
 				var nuke = FIRED_NUKE.instantiate()
 				nuke.position = Vector2(randi_range(-576, 576), randi_range(-324, 324))
 				get_parent().add_child(nuke)
