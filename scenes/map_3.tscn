@@ -22,7 +22,6 @@ radius = 227.21155
 [node name="Map3" type="Node2D" unique_id=479648284]
 script = ExtResource("1_an2rc")
 PlayerScene = ExtResource("2_jl3j3")
-winning_hat = 2
 
 [node name="Cacti" type="Area2D" parent="." unique_id=369679240]
 script = ExtResource("3_xn387")
@@ -239,6 +238,12 @@ theme_override_font_sizes/normal_font_size = 128
 text = "YOU LOSE!"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="PlayersContainer" type="Node2D" parent="." unique_id=1799140927]
+
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="." unique_id=1625138043]
+_spawnable_scenes = PackedStringArray("uid://ip6213vm7nec")
+spawn_path = NodePath("../PlayersContainer")
 
 [connection signal="body_entered" from="Cacti" to="Cacti" method="_on_body_entered"]
 [connection signal="timeout" from="Powerups/PowerupSpawnTimer" to="Powerups" method="_on_powerup_spawn_timer_timeout"]

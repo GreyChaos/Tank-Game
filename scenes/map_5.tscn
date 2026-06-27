@@ -48,7 +48,6 @@ point_count = 16
 [node name="Map5" type="Node2D" unique_id=479648284]
 script = ExtResource("1_eg1we")
 PlayerScene = ExtResource("2_2gudk")
-winning_hat = 5
 
 [node name="Boundries" type="StaticBody2D" parent="." unique_id=3303298]
 
@@ -420,7 +419,7 @@ vframes = 2
 frame = 7
 
 [node name="Cracking Timer" type="Timer" parent="." unique_id=635537882]
-wait_time = 2.0
+wait_time = 1.5
 autostart = true
 
 [node name="Penguins" type="Node2D" parent="." unique_id=1238323638]
@@ -459,6 +458,12 @@ rotation = 1.5182133
 progress = 484.72
 
 [node name="Penguin" parent="Penguins/Penguin3/PathFollow2D" unique_id=1815197195 instance=ExtResource("20_x481q")]
+
+[node name="PlayersContainer" type="Node2D" parent="." unique_id=1334976316]
+
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="." unique_id=465666254]
+_spawnable_scenes = PackedStringArray("uid://ip6213vm7nec")
+spawn_path = NodePath("../PlayersContainer")
 
 [connection signal="timeout" from="Powerups/PowerupSpawnTimer" to="Powerups" method="_on_powerup_spawn_timer_timeout"]
 [connection signal="timeout" from="RestartTimer" to="CanvasLayer/GameOver" method="_on_restart_timer_timeout"]

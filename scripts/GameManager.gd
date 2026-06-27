@@ -7,7 +7,10 @@ signal gameOver
 signal cleanShells
 signal switchMaps(mapString: String)
 var Powerups = []
+var TeamA = []
+var TeamB = []
 
+var current_gamemode: SceneManager.GameMode = SceneManager.GameMode.FFA
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:

@@ -1,23 +1,25 @@
 extends CharacterBody2D
 
-
+# base 75
 var SPEED = 75.0
 var ROTATESPEED = 75.0 / 3
 const SHELLSCENE = preload("res://scenes/shell.tscn")
 var currentHealth = 3
 var maxHealth = 3
 var currentScale = 1
-var spawnPoint = null
 var powerData : PowerupData = null
 var cameraSetup = false
 var next_shot_power = false
 var flashTween
+var flag_being_held = null
 const FIRED_NUKE = preload("res://scenes/fired_nuke.tscn")
+var spawn_cords : Vector2
 @onready var camera = $Camera2D
 
 func _ready() -> void:
 	if GameManager.Players[multiplayer.get_unique_id()].wasWinner:
 		winner()
+	spawn_cords = global_position
 	$TankSprite.modulate = GameManager.Players[multiplayer.get_unique_id()].color
 	$Name.text = GameManager.Players[multiplayer.get_unique_id()].name
 	$MultiplayerSynchronizer.set_multiplayer_authority(str(name).to_int())
@@ -29,6 +31,16 @@ func _ready() -> void:
 	flashTween.tween_property(self, "modulate:a", 1.0, .8)
 	modulate.a = 1.0
 	flashTween.pause()
+	if has_meta("camera_size"):
+		var camera_size = get_meta("camera_size")
+		if multiplayer.get_unique_id() == name.to_int():
+			camera.make_current()
+			camera.limit_bottom = camera_size[1]
+			camera.limit_right = camera_size[0]
+			camera.limit_left = -camera_size[0]
+			camera.limit_top = -camera_size[1]
+		else:
+			camera.enabled = false
 	
 func _on_synchronized():
 	if cameraSetup:
@@ -147,6 +159,13 @@ func takeDamage(hitPlayerID: int, damageAmount: int):
 	currentHealth -= damageAmount
 	$hitSound.play()
 	if currentHealth <= 0:
+		if GameManager.current_gamemode == SceneManager.GameMode.CTF:
+			restart()
+			position = spawn_cords
+			if flag_being_held != null:
+				get_parent().get_parent().reset_flag(flag_being_held)
+				flag_being_held = null
+			return
 		GameManager.playerDied(GameManager.Players[hitPlayerID].id)
 		visible = false
 		set_physics_process(false)
@@ -167,7 +186,6 @@ func loser():
 func restart():
 	reset_base_stats()
 	rotation = randf_range(0,360)
-	global_position = spawnPoint.global_position
 	visible = true
 	set_physics_process(true)
 	$CollisionShape2D.set_deferred("disabled", false)

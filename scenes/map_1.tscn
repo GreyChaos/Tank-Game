@@ -224,5 +224,11 @@ text = "YOU LOSE!"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="PlayersContainer" type="Node2D" parent="." unique_id=835041128]
+
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="." unique_id=147476515]
+_spawnable_scenes = PackedStringArray("uid://ip6213vm7nec")
+spawn_path = NodePath("../PlayersContainer")
+
 [connection signal="timeout" from="RestartTimer" to="CanvasLayer/GameOver" method="_on_restart_timer_timeout"]
 [connection signal="timeout" from="Powerups/PowerupSpawnTimer" to="Powerups" method="_on_powerup_spawn_timer_timeout"]

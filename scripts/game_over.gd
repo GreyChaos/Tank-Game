@@ -32,6 +32,8 @@ func _on_restart_timer_timeout() -> void:
 
 @rpc("authority", "call_local", "reliable")
 func cleanup_data():
+	GameManager.TeamA.clear()
+	GameManager.TeamB.clear()
 	GameManager.cleanUpShells()
 	for powerup in GameManager.Powerups:
 		if powerup.spawnedSpot.hasItem:

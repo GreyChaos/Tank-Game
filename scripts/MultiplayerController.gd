@@ -89,10 +89,12 @@ func ContinueGame(mapPath: String):
 
 
 func _on_start_button_down() -> void:
+	$ButtonClicked.play()
 	StartGame.rpc(mapChoice)
 
 
 func _on_join_button_down() -> void:
+	$ButtonClicked.play()
 	peer = ENetMultiplayerPeer.new()
 	peer.create_client($JoinScreen/Server.text, port)
 	peer.get_host().compress(ENetConnection.COMPRESS_RANGE_CODER)
@@ -104,6 +106,7 @@ func _on_join_button_down() -> void:
 	$JoinScreen/Back.visible = false
 
 func _on_host_button_down() -> void:
+	$ButtonClicked.play()
 	peer = ENetMultiplayerPeer.new()
 
 	var error = peer.create_server(port, 8)
@@ -122,38 +125,46 @@ func _on_host_button_down() -> void:
 	$HostScreen/Back.visible = false
 
 func _on_join_menu_button_down() -> void:
+	$ButtonClicked.play()
 	$StartScreen.visible = false
 	$JoinScreen.visible = true
 
 
 func _on_host_menu_button_down() -> void:
+	$ButtonClicked.play()
 	$StartScreen.visible = false
 	$HostScreen.visible = true
 
 
 func _on_map_1_button_down() -> void:
+	$ButtonClicked.play()
 	mapChoice = GameManager.MAPS[0]
 	$HostScreen/MapSelected.global_position = $HostScreen/Map1.global_position
 
 func _on_map_2_button_down() -> void:
+	$ButtonClicked.play()
 	mapChoice = GameManager.MAPS[1]
 	$HostScreen/MapSelected.global_position = $HostScreen/Map2.global_position
 	
 func _on_map_3_button_down() -> void:
+	$ButtonClicked.play()
 	mapChoice = GameManager.MAPS[2]
 	$HostScreen/MapSelected.global_position = $HostScreen/Map3.global_position
 
 func _on_map_4_button_down() -> void:
+	$ButtonClicked.play()
 	mapChoice = GameManager.MAPS[3]
 	$HostScreen/MapSelected.global_position = $HostScreen/Map4.global_position
 	
 	
 func _on_map_5_button_down() -> void:
+	$ButtonClicked.play()
 	mapChoice = GameManager.MAPS[4]
 	$HostScreen/MapSelected.global_position = $HostScreen/Map5.global_position
 
 	
 func _on_settings_button_down() -> void:
+	$ButtonClicked.play()
 	$StartScreen.visible = false
 	$SettingsScreen.visible = true
 
@@ -186,6 +197,7 @@ func switchMaps(mapPath: String) -> void:
 
 
 func _on_customize_menu_button_down() -> void:
+	$ButtonClicked.play()
 	$CustomizeScreen/CustomizeMenu/ColorPicker.visible = !$CustomizeScreen/CustomizeMenu/ColorPicker.is_visible_in_tree()
 
 func _on_color_picker_color_changed(color: Color) -> void:
@@ -202,7 +214,7 @@ func save_player_settings():
 	config.set_value("player", "name", $CustomizeScreen/CustomizeMenu/Name.text)
 	config.set_value("player", "color", $CustomizeScreen/CustomizeMenu/Tank1.modulate.to_html())
 	config.set_value("server", "last connected", $JoinScreen/Server.text)
-	config.set_value("audio", "master", $"SettingsScreen/MasterVolume/Master Volume".value)
+	config.set_value("setting", "audio master", $"SettingsScreen/MasterVolume/Master Volume".value)
 	config.set_value("setting", "fullscreen", DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN)
 
 	config.save("user://settings.cfg")
@@ -221,7 +233,7 @@ func load_player_settings():
 		var last_ip =  config.get_value("server", "last connected", "127.0.0.1")
 		$JoinScreen/Server.text = last_ip
 		# Load Volume
-		var saved_master_volume =  config.get_value("audio", "master", "0")
+		var saved_master_volume =  config.get_value("setting", "audio master", "0")
 		$"SettingsScreen/MasterVolume/Master Volume".value = float(saved_master_volume)
 		# Load Fullscreen
 		var saved_fullscreen =  config.get_value("setting", "fullscreen", false)
@@ -230,6 +242,7 @@ func load_player_settings():
 			DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_BORDERLESS, true)
 
 func _on_back_button_down() -> void:
+	$ButtonClicked.play()
 	$StartScreen.visible = true
 	$JoinScreen.visible = false
 	$HostScreen.visible = false

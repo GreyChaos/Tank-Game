@@ -169,7 +169,10 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_utbjn"]
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_n3826"]
+size = Vector2(50, 48)
 
 [sub_resource type="Gradient" id="Gradient_utbjn"]
 offsets = PackedFloat32Array(0.44585988, 1)
@@ -300,6 +303,14 @@ collision_layer = 8
 collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DestoryIfSink" unique_id=264494842]
+position = Vector2(0, 8)
+shape = SubResource("RectangleShape2D_utbjn")
+
+[node name="FlagDectection" type="Area2D" parent="." unique_id=1011040327]
+collision_layer = 16384
+collision_mask = 16384
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FlagDectection" unique_id=701661184]
 position = Vector2(0, 8)
 shape = SubResource("RectangleShape2D_n3826")
 
