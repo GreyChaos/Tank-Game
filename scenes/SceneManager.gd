@@ -1,6 +1,7 @@
 extends Node2D
 class_name SceneManager
 
+var CPUScene = load("res://scenes/cpu.tscn")
 @export var PlayerScene : PackedScene
 @export var CameraSize = Vector2(576, 324)
 @export var winning_hat = 0
@@ -18,6 +19,7 @@ func _ready() -> void:
 		spawnPoints.shuffle()
 	if multiplayer.is_server():
 		spawn_players(spawnPoints)
+	print(winning_hat)
 
 func spawn_players(spawnPoints : Array) -> void:
 	var index = 0
@@ -45,6 +47,24 @@ func spawn_players(spawnPoints : Array) -> void:
 			"rotation": randf_range(0, 360)
 		})
 		index += 1
+	for i in range(GameManager.CPU_count):
+		if gamemode == GameMode.CTF:
+			var CPU = CPUScene.instantiate()
+			if i % 2 == 0:
+				GameManager.TeamA.append(CPU)
+				CPU.change_name_color(Color.AQUAMARINE)
+				CPU.global_position = teamA_spawns.pop_front().global_position
+			else:
+				GameManager.TeamB.append(CPU)
+				CPU.change_name_color(Color.CRIMSON)
+				CPU.global_position = teamB_spawns.pop_front().global_position
+			GameManager.CPUS[i] = CPU
+			$PlayersContainer.add_child(CPU, true)
+		else:
+			var CPU = CPUScene.instantiate()
+			CPU.global_position = spawnPoints.pop_front().global_position
+			GameManager.CPUS[i] = CPU
+			$PlayersContainer.add_child(CPU, true)
 
 func _spawn_player(data: Dictionary) -> Node:
 	var player = PlayerScene.instantiate()
@@ -64,9 +84,11 @@ func _spawn_player(data: Dictionary) -> Node:
 	else:
 		player.change_name_color(Color.WHITE)
 	return player
+
 	
-func reset_flag(flag: Sprite2D):
-	flag.get_parent().reset_flag()
+func drop_flag(flag: Sprite2D, pos: Vector2):
+	flag.get_parent().drop_flag(pos)
+
 
 func start_broadcast(message: String):
 	$CanvasLayer/Broadcast.text = message

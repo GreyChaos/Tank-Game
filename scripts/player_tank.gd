@@ -1,5 +1,5 @@
 extends CharacterBody2D
-
+class_name PlayerTank
 # base 75
 var SPEED = 75.0
 var ROTATESPEED = 75.0 / 3
@@ -56,6 +56,9 @@ func _on_synchronized():
 
 func _physics_process(delta: float) -> void:
 	if $MultiplayerSynchronizer.get_multiplayer_authority() == multiplayer.get_unique_id():
+		#Debug L for Lud Speed
+		if Input.is_action_just_pressed("speed_boost") and multiplayer.is_server():
+			SPEED = 300
 		#Debug K to Kill
 		if Input.is_action_just_pressed("kill_player") and multiplayer.is_server():
 			takeDamage.rpc(multiplayer.get_unique_id(), 3)
@@ -163,14 +166,14 @@ func takeDamage(hitPlayerID: int, damageAmount: int):
 	$hitSound.play()
 	if currentHealth <= 0:
 		if GameManager.current_gamemode == SceneManager.GameMode.CTF:
+			if flag_being_held != null:
+				get_parent().get_parent().drop_flag(flag_being_held, global_position)
+				flag_being_held = null
 			visible = false
 			set_physics_process(false)
 			$CollisionShape2D.set_deferred("disabled", true)
 			$RespawnTimer.start()
 			position = spawn_cords
-			if flag_being_held != null:
-				get_parent().get_parent().reset_flag(flag_being_held)
-				flag_being_held = null
 			return
 		GameManager.playerDied(GameManager.Players[hitPlayerID].id)
 		visible = false
@@ -179,7 +182,6 @@ func takeDamage(hitPlayerID: int, damageAmount: int):
 	else:
 		currentScale -= .05
 		global_scale = Vector2(currentScale, currentScale)
-		
 		
 func winner():
 	$Hat.frame = GameManager.Players[multiplayer.get_unique_id()].hat

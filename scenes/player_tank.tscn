@@ -235,6 +235,7 @@ position = Vector2(4, -28)
 rotation = 0.4477515
 
 [node name="Name" type="RichTextLabel" parent="." unique_id=730658373]
+z_index = 2
 offset_left = -51.0
 offset_top = 27.0
 offset_right = 52.0
@@ -251,6 +252,7 @@ metadata/_edit_lock_ = true
 replication_config = SubResource("SceneReplicationConfig_yuybd")
 
 [node name="Hearts" type="AnimatedSprite2D" parent="." unique_id=1412014967]
+z_index = 2
 position = Vector2(-2, 56)
 sprite_frames = SubResource("SpriteFrames_n3826")
 animation = &"Heath"

@@ -96,6 +96,9 @@ properties/3/replication_mode = 2
 properties/4/path = NodePath("TankSprite:animation")
 properties/4/spawn = true
 properties/4/replication_mode = 2
+properties/5/path = NodePath("Name:modulate")
+properties/5/spawn = true
+properties/5/replication_mode = 2
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_crs0q"]
 atlas = ExtResource("6_xrgt0")
@@ -250,6 +253,7 @@ position = Vector2(29, 3.999998)
 rotation = 1.9092509
 
 [node name="Name" type="RichTextLabel" parent="." unique_id=509744476]
+z_index = 2
 offset_left = -28.0
 offset_top = -51.0
 offset_right = 75.0
@@ -266,6 +270,7 @@ horizontal_alignment = 1
 replication_config = SubResource("SceneReplicationConfig_uvs2i")
 
 [node name="Hearts" type="AnimatedSprite2D" parent="." unique_id=1295232844]
+z_index = 2
 position = Vector2(-56, 0)
 rotation = 1.5707964
 sprite_frames = SubResource("SpriteFrames_ostwh")
@@ -321,4 +326,9 @@ process_material = SubResource("ParticleProcessMaterial_pw20l")
 wait_time = 1.6999999999999995
 one_shot = true
 
+[node name="RespawnTimer" type="Timer" parent="." unique_id=1284391784]
+wait_time = 2.0
+one_shot = true
+
 [connection signal="timeout" from="UpdateTarget" to="." method="_on_update_target_timeout"]
+[connection signal="timeout" from="RespawnTimer" to="." method="restart"]

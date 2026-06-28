@@ -20,13 +20,17 @@ func _on_falling_timer_timeout() -> void:
 
 
 func _on_cleanup_timer_timeout() -> void:
-	queue_free()
+	if multiplayer.is_server():
+		queue_free()
 
 
 func check_for_damage():
 	for body in $Damage.get_overlapping_bodies():
 		if body is CharacterBody2D:
 			var hitPlayerID = str(body.name).to_int()
-			if GameManager.Players.has(hitPlayerID):
-				var playerName = GameManager.Players[hitPlayerID].name
+			if body.has_method("cpu_takeDamage"):
+				body.cpu_takeDamage(2)
+			elif GameManager.Players.has(hitPlayerID):
 				body.takeDamage.rpc(hitPlayerID, 2)
+				
+				

@@ -2,13 +2,16 @@ extends Node
 
 const MAPS = ["res://scenes/map_1.tscn", "res://scenes/map_2.tscn", "res://scenes/map_3.tscn", "res://scenes/map_4.tscn", "res://scenes/map_5.tscn"]
 var Players = {}
+var CPUS = {}
 var DeadPlayers = []
+var dead_cpus = []
 signal gameOver
 signal cleanShells
 signal switchMaps(mapString: String)
 var Powerups = []
 var TeamA = []
 var TeamB = []
+var CPU_count = 7
 
 var current_gamemode: SceneManager.GameMode = SceneManager.GameMode.FFA
 

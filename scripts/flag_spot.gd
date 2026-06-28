@@ -7,11 +7,13 @@ enum TeamLabel{
 	A,
 	B
 }
+var starting_flag_spot
 
 @export var team: TeamLabel = TeamLabel.A
 
 func _ready() -> void:
 	local_flag = $Flag
+	starting_flag_spot = global_position
 
 func _physics_process(delta: float) -> void:
 	if !has_flag:
@@ -19,7 +21,12 @@ func _physics_process(delta: float) -> void:
 
 func _on_area_entered(area: Area2D) -> void:
 	var player = area.get_parent()
-	if player is CharacterBody2D:
+	if player is PlayerTank:
+		# Check to see if player can return flag
+		if GameManager.TeamA.has(player) and team == TeamLabel.A and global_position != starting_flag_spot:
+			reset_flag()
+		if GameManager.TeamB.has(player) and team == TeamLabel.B and global_position != starting_flag_spot:
+			reset_flag()
 		# Check to see if player can pick up flag
 		if has_flag and player.flag_being_held == null:
 			if GameManager.TeamA.has(player) and team == TeamLabel.A:
@@ -50,8 +57,18 @@ func _on_area_entered(area: Area2D) -> void:
 					playera.takeDamage(str(playera.name).to_int(), 10)
 					queue_free()
 
-func reset_flag():
+func reset_flag(): ## Resets flag back to original spot
+	global_position = starting_flag_spot
 	$Flag.global_position = global_position
-	print(global_position)
 	has_flag = true
 	player_with_flag = null
+	
+func drop_flag(dropped_spot: Vector2): ## Drops a flag where the player died
+	if team == TeamLabel.A:
+		$"..".start_broadcast("[color=AQUAMARINE]Team A[/color], Flag dropped!")
+	if team == TeamLabel.B:
+		$"..".start_broadcast("[color=crimson]Team B[/color], Flag dropped!")
+	global_position = dropped_spot
+	has_flag = true
+	player_with_flag = null
+	$Flag.global_position = global_position

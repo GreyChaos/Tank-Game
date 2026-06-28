@@ -63,6 +63,8 @@ func SendPlayerInfo(player_name, id, custom_color: Color):
 	if multiplayer.is_server():
 		for i in GameManager.Players:
 			SendPlayerInfo.rpc(GameManager.Players[i].name, i, GameManager.Players[i].color)
+	$"HostScreen/CPU Slider".tick_count = 8 - GameManager.Players.size()
+	$"HostScreen/CPU Slider".max_value = 8 - GameManager.Players.size()
 
 
 @rpc("any_peer", "call_local", "reliable")
@@ -262,3 +264,7 @@ func _on_toggle_fullscreen_button_down() -> void:
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN)
 		DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_BORDERLESS, true)
 	save_player_settings()
+
+
+func _on_cpu_slider_value_changed(value: float) -> void:
+	GameManager.CPU_count = value

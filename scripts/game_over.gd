@@ -15,6 +15,7 @@ func gameOver() -> void:
 	$"../../RestartTimer".start()
 	if GameManager.DeadPlayers.has(multiplayer.get_unique_id()):
 		$"../YouLose".visible = true
+		GameManager.Players[multiplayer.get_unique_id()].hat = $"../..".winning_hat
 		GameManager.Players[multiplayer.get_unique_id()].playerObject.loser()
 		GameManager.Players[multiplayer.get_unique_id()].wasWinner = false
 	else:
@@ -33,6 +34,7 @@ func _on_restart_timer_timeout() -> void:
 
 @rpc("authority", "call_local", "reliable")
 func cleanup_data():
+	GameManager.CPUS.clear()
 	GameManager.TeamA.clear()
 	GameManager.TeamB.clear()
 	GameManager.cleanUpShells()
