@@ -14,6 +14,10 @@ config/name="Tank Game"
 run/main_scene="uid://151dr6ec2sog"
 config/features=PackedStringArray("4.7", "Forward Plus")
 
+[audio]
+
+buses/default_bus_layout="uid://y56mgdlm5ahb"
+
 [autoload]
 
 GameManager="*uid://cmv4a23lsoqtm"

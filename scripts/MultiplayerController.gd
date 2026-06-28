@@ -20,7 +20,7 @@ func _ready() -> void:
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	$CountScreen/Countdown.text = "Starting in: " + "%0.1f" % $CountScreen/Timer.time_left
 
 
@@ -46,9 +46,9 @@ func connection_failed():
 
 
 @rpc("any_peer", "reliable")
-func SendPlayerInfo(name, id, custom_color: Color):
+func SendPlayerInfo(player_name, id, custom_color: Color):
 	GameManager.Players[id] = {
-		"name": name,
+		"name": player_name,
 		"id": id,
 		"wasWinner": false,
 		"playerObject": null,

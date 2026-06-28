@@ -131,6 +131,7 @@ scale = Vector2(2.5, 2.5)
 sprite_frames = SubResource("SpriteFrames_v3n02")
 
 [node name="Falling Timer" type="Timer" parent="." unique_id=1685113904]
+wait_time = 2.25
 one_shot = true
 
 [node name="Cleanup Timer" type="Timer" parent="." unique_id=1987518905]

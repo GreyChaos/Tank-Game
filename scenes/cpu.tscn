@@ -1,0 +1,122 @@
+[gd_scene format=3 uid="uid://605afdu10blj"]
+
+[ext_resource type="Script" uid="uid://5fyvo4a6t7gh" path="res://scripts/cpu.gd" id="1_4u4td"]
+[ext_resource type="Texture2D" uid="uid://dvw2xm661lm4p" path="res://assets/sprites/Tank1.png" id="2_k5r05"]
+[ext_resource type="Texture2D" uid="uid://dfbpgeo8ctiuc" path="res://assets/sprites/Tank4.png" id="3_nj8wu"]
+[ext_resource type="Texture2D" uid="uid://bg57tiod6udr1" path="res://assets/sprites/Tank3.png" id="4_iwjtb"]
+[ext_resource type="Texture2D" uid="uid://dd7i63xi586pc" path="res://assets/sprites/Tank2.png" id="5_4v60x"]
+
+[sub_resource type="Gradient" id="Gradient_4u4td"]
+offsets = PackedFloat32Array(0, 0.5344828, 0.74712646, 1)
+colors = PackedColorArray(1, 1, 1, 1, 0.5107427, 0.5107427, 0.5107427, 1, 0.31609195, 0.31609195, 0.31609195, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_gym88"]
+gradient = SubResource("Gradient_4u4td")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_k5r05"]
+particle_flag_disable_z = true
+emission_shape = 1
+emission_sphere_radius = 1.0
+inherit_velocity_ratio = 0.306
+direction = Vector3(0, 0, 0)
+spread = 114.729
+flatness = 0.126
+gravity = Vector3(10, 2, 10)
+radial_accel_min = 39.999996
+radial_accel_max = 49.999996
+color_ramp = SubResource("GradientTexture1D_gym88")
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_o42xc"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_k5r05")
+}],
+"loop": 1,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_nj8wu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_iwjtb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_4v60x")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_k5r05")
+}],
+"loop": 1,
+"name": &"moving_backward",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_k5r05")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_4v60x")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_iwjtb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_nj8wu")
+}],
+"loop": 1,
+"name": &"moving_foward",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4u4td"]
+size = Vector2(50, 48)
+
+[node name="CPU" type="CharacterBody2D" unique_id=1072216560]
+script = ExtResource("1_4u4td")
+
+[node name="ShootParticle" type="GPUParticles2D" parent="." unique_id=276773443]
+position = Vector2(29, 0)
+rotation = -1.5707964
+scale = Vector2(5.1257343, 4.7203484)
+emitting = false
+amount = 45
+lifetime = 0.21
+one_shot = true
+trail_enabled = true
+trail_lifetime = 0.1
+process_material = SubResource("ParticleProcessMaterial_k5r05")
+
+[node name="BulletSpawn" type="Node2D" parent="." unique_id=2030968732]
+position = Vector2(29, 0)
+rotation = -1.5707964
+
+[node name="ShootCooldown" type="Timer" parent="." unique_id=1123500173]
+wait_time = 0.6
+one_shot = true
+
+[node name="TankSprite" type="AnimatedSprite2D" parent="." unique_id=263044418]
+z_index = 2
+rotation = 1.5707964
+sprite_frames = SubResource("SpriteFrames_o42xc")
+animation = &"idle"
+autoplay = "idle"
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="." unique_id=433139458]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=967058805]
+position = Vector2(-8, 0)
+rotation = -1.5707964
+shape = SubResource("RectangleShape2D_4u4td")
+
+[node name="UpdateTarget" type="Timer" parent="." unique_id=1351575299]
+wait_time = 0.1
+autostart = true
+
+[node name="RayCast2D" type="RayCast2D" parent="." unique_id=2017599146]
+target_position = Vector2(335, 0)
+collision_mask = 2
+
+[connection signal="timeout" from="UpdateTarget" to="." method="_on_update_target_timeout"]

@@ -42,6 +42,7 @@ func spawn_players(spawnPoints : Array) -> void:
 			"pos": pos,
 			"team": team,
 			"camera_size": CameraSize,
+			"rotation": randf_range(0, 360)
 		})
 		index += 1
 
@@ -49,6 +50,7 @@ func _spawn_player(data: Dictionary) -> Node:
 	var player = PlayerScene.instantiate()
 	player.name = str(data["id"])
 	player.position = data["pos"]
+	player.rotation = data["rotation"]
 	player.set_meta("team", data["team"])
 	player.set_meta("camera_size", data["camera_size"])
 
@@ -65,10 +67,6 @@ func _spawn_player(data: Dictionary) -> Node:
 	
 func reset_flag(flag: Sprite2D):
 	flag.get_parent().reset_flag()
-
-func _physics_process(delta: float) -> void:
-	if gamemode == GameMode.CTF:
-		pass
 
 func start_broadcast(message: String):
 	$CanvasLayer/Broadcast.text = message

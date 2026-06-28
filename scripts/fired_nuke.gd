@@ -3,8 +3,7 @@ extends Node2D
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	if multiplayer.is_server():
-		$"Falling Timer".wait_time = randf_range(2, 2.5)
+	$"Falling Timer".wait_time = randf_range(2, 2.5)
 	$"Falling Timer".start()
 
 
