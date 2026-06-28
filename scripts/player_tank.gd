@@ -14,6 +14,7 @@ var flashTween
 var flag_being_held = null
 const FIRED_NUKE = preload("res://scenes/fired_nuke.tscn")
 var spawn_cords : Vector2
+var name_color
 @onready var camera = $Camera2D
 
 func _ready() -> void:
@@ -41,6 +42,8 @@ func _ready() -> void:
 			camera.limit_top = -camera_size[1]
 		else:
 			camera.enabled = false
+	name_color = $Name.modulate
+	
 	
 func _on_synchronized():
 	if cameraSetup:
@@ -198,3 +201,6 @@ func restart():
 func _on_damage_cooldown_timeout() -> void:
 	flashTween.pause()
 	modulate.a = 1.0
+
+func change_name_color(color: Color):
+	$Name.modulate = color

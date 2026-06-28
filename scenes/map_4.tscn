@@ -84,11 +84,29 @@ autoplay = true
 
 [node name="SpawnLocations" type="Node2D" parent="." unique_id=1465899911]
 
-[node name="0" type="Node2D" parent="SpawnLocations" unique_id=972396333 groups=["PlayerSpawnPoint"]]
-position = Vector2(-933, -141)
+[node name="TeamA" type="Node2D" parent="SpawnLocations" unique_id=972396333 groups=["PlayerSpawnPoint"]]
+position = Vector2(-928, 33)
 
-[node name="1" type="Node2D" parent="SpawnLocations" unique_id=1139527298 groups=["PlayerSpawnPoint"]]
-position = Vector2(929, -134)
+[node name="TeamA2" type="Node2D" parent="SpawnLocations" unique_id=271995625 groups=["PlayerSpawnPoint"]]
+position = Vector2(-926, -56)
+
+[node name="TeamA3" type="Node2D" parent="SpawnLocations" unique_id=1935317533 groups=["PlayerSpawnPoint"]]
+position = Vector2(-1013, -125)
+
+[node name="TeamA4" type="Node2D" parent="SpawnLocations" unique_id=1738470121 groups=["PlayerSpawnPoint"]]
+position = Vector2(-1014, 94)
+
+[node name="TeamB" type="Node2D" parent="SpawnLocations" unique_id=1139527298 groups=["PlayerSpawnPoint"]]
+position = Vector2(1014, -112)
+
+[node name="TeamB2" type="Node2D" parent="SpawnLocations" unique_id=1575533312 groups=["PlayerSpawnPoint"]]
+position = Vector2(937, -66)
+
+[node name="TeamB3" type="Node2D" parent="SpawnLocations" unique_id=601506359 groups=["PlayerSpawnPoint"]]
+position = Vector2(938, 34)
+
+[node name="TeamB4" type="Node2D" parent="SpawnLocations" unique_id=827935576 groups=["PlayerSpawnPoint"]]
+position = Vector2(1018, 88)
 
 [node name="RestartTimer" type="Timer" parent="." unique_id=1285126305]
 wait_time = 5.0
@@ -234,6 +252,21 @@ text = "YOU LOSE!"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="Broadcast" type="RichTextLabel" parent="CanvasLayer" unique_id=578304580]
+offset_left = 1.0
+offset_top = 87.0
+offset_right = 1152.0
+offset_bottom = 328.0
+theme_override_fonts/normal_font = ExtResource("4_0i8bn")
+theme_override_font_sizes/normal_font_size = 64
+bbcode_enabled = true
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="BroadcastTimer" type="Timer" parent="CanvasLayer" unique_id=51839081]
+wait_time = 4.0
+one_shot = true
+
 [node name="FlagSpot" type="Area2D" parent="." unique_id=539807732]
 position = Vector2(-1020, -15)
 collision_layer = 0
@@ -282,6 +315,7 @@ script = ExtResource("11_imjx3")
 
 [connection signal="timeout" from="RestartTimer" to="CanvasLayer/GameOver" method="_on_restart_timer_timeout"]
 [connection signal="timeout" from="Powerups/PowerupSpawnTimer" to="Powerups" method="_on_powerup_spawn_timer_timeout"]
+[connection signal="timeout" from="CanvasLayer/BroadcastTimer" to="." method="_on_broadcast_timer_timeout"]
 [connection signal="area_entered" from="FlagSpot" to="FlagSpot" method="_on_area_entered"]
 [connection signal="area_entered" from="FlagSpot2" to="FlagSpot2" method="_on_area_entered"]
 [connection signal="timeout" from="RainingNukes" to="RainingNukes" method="_on_timeout"]

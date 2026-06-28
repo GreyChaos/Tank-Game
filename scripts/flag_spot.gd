@@ -29,17 +29,26 @@ func _on_area_entered(area: Area2D) -> void:
 			has_flag = false
 			player.flag_being_held = $Flag
 			player_with_flag = player
+			var player_name = str(GameManager.Players[str(player.name).to_int()].name)
+			var player_color = GameManager.Players[str(player.name).to_int()].playerObject.name_color.to_html(false)
+			$"..".start_broadcast("[color=#" + player_color + "]" + player_name + "[/color] has taken a flag!")
 		# Check to see if player is returning a flag
 		if GameManager.TeamA.has(player) and team == TeamLabel.A:
 			if player.flag_being_held != local_flag and player.flag_being_held != null:
 				for playerb in GameManager.TeamB:
 					GameManager.current_gamemode = SceneManager.GameMode.FFA
+					if GameManager.TeamA.size() > 1:
+						$"..".start_broadcast("Congrats [color=AQUAMARINE]Team A[/color], but\nTHERE CAN ONLY BE ONE\nFREE FOR ALL!")
 					playerb.takeDamage(str(playerb.name).to_int(), 10)
+					queue_free()
 		if GameManager.TeamB.has(player) and team == TeamLabel.B:
 			if player.flag_being_held != local_flag and player.flag_being_held != null:
 				for playera in GameManager.TeamA:
 					GameManager.current_gamemode = SceneManager.GameMode.FFA
+					if GameManager.TeamB.size() > 1:
+						$"..".start_broadcast("Congrats [color=crimson]Team B[/color], but\nTHERE CAN ONLY BE ONE\nFREE FOR ALL!")
 					playera.takeDamage(str(playera.name).to_int(), 10)
+					queue_free()
 
 func reset_flag():
 	$Flag.global_position = global_position
