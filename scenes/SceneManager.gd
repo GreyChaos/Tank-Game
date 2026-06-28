@@ -47,6 +47,8 @@ func spawn_players(spawnPoints : Array) -> void:
 			"rotation": randf_range(0, 360)
 		})
 		index += 1
+	var cpu_names = ["Bagelbot", "Craftulon", "Robopollo", "Botty", "Betty", "Berty", "Bloopy"]
+	cpu_names.shuffle()
 	for i in range(GameManager.CPU_count):
 		if gamemode == GameMode.CTF:
 			var CPU = CPUScene.instantiate()
@@ -59,11 +61,13 @@ func spawn_players(spawnPoints : Array) -> void:
 				CPU.change_name_color(Color.CRIMSON)
 				CPU.global_position = teamB_spawns.pop_front().global_position
 			GameManager.CPUS[i] = CPU
+			CPU.robot_name = cpu_names.pop_front()
 			$PlayersContainer.add_child(CPU, true)
 		else:
 			var CPU = CPUScene.instantiate()
 			CPU.global_position = spawnPoints.pop_front().global_position
 			GameManager.CPUS[i] = CPU
+			CPU.robot_name = cpu_names.pop_front()
 			$PlayersContainer.add_child(CPU, true)
 
 func _spawn_player(data: Dictionary) -> Node:
@@ -88,6 +92,14 @@ func _spawn_player(data: Dictionary) -> Node:
 	
 func drop_flag(flag: Sprite2D, pos: Vector2):
 	flag.get_parent().drop_flag(pos)
+
+
+func get_team_flag(team: FlagSpot.TeamLabel) -> Area2D:
+	if team == FlagSpot.TeamLabel.A:
+		return $FlagSpot
+	elif team == FlagSpot.TeamLabel.B:
+		return $FlagSpot2
+	return null
 
 
 func start_broadcast(message: String):

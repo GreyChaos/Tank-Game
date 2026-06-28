@@ -25,6 +25,23 @@ polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2), PackedInt32Array(
 outlines = Array[PackedVector2Array]([PackedVector2Array(-1293, -632, 1026, -627, 1019, 673, -1290, 670)])
 agent_radius = 35.0
 
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_imjx3"]
+properties/0/path = NodePath("CanvasLayer/Broadcast:text")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath("FlagSpot/Flag:position")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath("FlagSpot2/Flag:position")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+properties/3/path = NodePath("FlagSpot:position")
+properties/3/spawn = true
+properties/3/replication_mode = 2
+properties/4/path = NodePath("FlagSpot2:position")
+properties/4/spawn = true
+properties/4/replication_mode = 2
+
 [node name="Map4" type="Node2D" unique_id=479648284]
 script = ExtResource("1_imjx3")
 PlayerScene = ExtResource("2_nasj0")
@@ -324,6 +341,9 @@ polygon = PackedVector2Array(-730, 289, -730, 292.09998, -784, 339.09998, -790.2
 
 [node name="CollisionPolygon2D14" type="CollisionPolygon2D" parent="NavigationRegion2D2/Boundries" unique_id=916626124]
 polygon = PackedVector2Array(723, 288.90002, 723, 292.2, 694.1, 325, 692.1, 325, 691, 344.90002, 691, 346.40002, 688, 351.40002, 688, 353.7, 656.5, 370, 653.1, 370, 616.1, 414, 614, 414, 614, 440.80005, 648, 473.80005, 648, 475.19995, 650, 476.30005, 655.5, 473, 657, 473, 679, 446, 681.6, 446, 676.5, 427, 677, 421.09998, 677, 419.19995, 691, 413.30005, 704.9, 414, 708.9, 414, 727.9, 391, 731, 391, 728, 383.5, 734.4, 381, 735.6, 381, 735, 386.90002, 735, 390.90002, 813, 458.80005, 813, 460.30005, 815.5, 461.40002, 818.80005, 458, 820.5, 458, 824, 446.30005, 824, 445.5, 826, 445, 828, 447.59998, 828, 451.19995, 832, 449.19995, 832, 459.19995, 843.5, 465, 849, 478.40002, 849, 480.40002, 858.6, 484, 865.80005, 484, 897.80005, 451, 899.19995, 451, 900.30005, 449, 897, 443.5, 897, 440.09998, 890, 434.09998, 890, 433.09998, 839, 388.09998, 839, 386.90002, 834.6, 384, 830.19995, 384, 827.19995, 387, 816.69995, 379, 811.19995, 379, 797, 352.40002, 797, 350.09998, 736, 296.09998, 736, 294.7)
+
+[node name="CTFSync" type="MultiplayerSynchronizer" parent="." unique_id=1478522479]
+replication_config = SubResource("SceneReplicationConfig_imjx3")
 
 [connection signal="timeout" from="RestartTimer" to="CanvasLayer/GameOver" method="_on_restart_timer_timeout"]
 [connection signal="timeout" from="Powerups/PowerupSpawnTimer" to="Powerups" method="_on_powerup_spawn_timer_timeout"]

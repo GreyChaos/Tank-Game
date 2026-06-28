@@ -1,4 +1,5 @@
 extends CharacterBody2D
+class_name CPU
 
 var speed = 75
 const SHELLSCENE = preload("res://scenes/shell.tscn")
@@ -13,6 +14,7 @@ var flag_being_held = null
 const FIRED_NUKE = preload("res://scenes/fired_nuke.tscn")
 var spawn_cords : Vector2
 var name_color
+var robot_name = "null"
 
 
 # Called when the node enters the scene tree for the first time.
@@ -24,6 +26,8 @@ func _ready() -> void:
 	flashTween.tween_property(self, "modulate:a", 1.0, .8)
 	modulate.a = 1.0
 	flashTween.pause()
+	name_color = $Name.modulate
+	$Name.text = robot_name
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta: float) -> void:
@@ -48,12 +52,56 @@ func _physics_process(delta: float) -> void:
 
 
 func _on_update_target_timeout() -> void:
-	$NavigationAgent2D.target_position = get_closest_player()
+	if multiplayer.is_server():
+		$NavigationAgent2D.target_position = get_closest_player()
 
 
 func get_closest_player() -> Vector2:
 	var closest_player_distance = INF
 	var closest_player_cords = Vector2.ZERO
+	# If you have the flag, run home
+	if flag_being_held:
+		if GameManager.TeamA.has(self):
+			var flagSpot = $"../../".get_team_flag(FlagSpot.TeamLabel.A)
+			return flagSpot.global_position
+		if GameManager.TeamB.has(self):
+			var flagSpot = $"../../".get_team_flag(FlagSpot.TeamLabel.B)
+			return flagSpot.global_position
+	# Check for own flag if CTF
+	if GameManager.current_gamemode == SceneManager.GameMode.CTF:
+		if GameManager.TeamA.has(self):
+			var flagSpot = $"../../".get_team_flag(FlagSpot.TeamLabel.A)
+			if !flagSpot.has_flag or flagSpot.starting_flag_spot != flagSpot.global_position:
+				return flagSpot.local_flag.global_position
+		if GameManager.TeamB.has(self):
+			var flagSpot = $"../../".get_team_flag(FlagSpot.TeamLabel.B)
+			if !flagSpot.has_flag or flagSpot.starting_flag_spot != flagSpot.global_position:
+				return flagSpot.local_flag.global_position
+	# Check for enemy flag if CTF and enemy not within PriorityTrigger
+	var bodies_in_priority = $PriorityTarger.get_overlapping_bodies()
+	for body in bodies_in_priority:
+		if body in GameManager.DeadPlayers:
+			continue
+		if GameManager.TeamA.has(self) and GameManager.TeamA.has(body):
+			continue
+		if GameManager.TeamB.has(self) and GameManager.TeamB.has(body):
+			continue
+		if GameManager.TeamA.has(self) and GameManager.TeamA.has(body):
+			continue
+		if GameManager.TeamB.has(self) and GameManager.TeamB.has(body):
+			continue
+		return body.global_position
+	# Continue to flag
+	if GameManager.current_gamemode == SceneManager.GameMode.CTF:
+		if GameManager.TeamA.has(self):
+			var flagSpot = $"../../".get_team_flag(FlagSpot.TeamLabel.B)
+			if flagSpot.has_flag:
+				return flagSpot.global_position
+		if GameManager.TeamB.has(self):
+			var flagSpot = $"../../".get_team_flag(FlagSpot.TeamLabel.A)
+			if flagSpot.has_flag:
+				return flagSpot.global_position
+	# Check for players, ignoring teammaps, and dead players
 	for player in GameManager.Players.values():
 		if player.id in GameManager.DeadPlayers:
 			continue
@@ -108,10 +156,10 @@ func cpu_takeDamage(damageAmount: int):
 			set_physics_process(false)
 			$CollisionShape2D.set_deferred("disabled", true)
 			$RespawnTimer.start()
-			position = spawn_cords
 			if flag_being_held != null:
-				get_parent().get_parent().reset_flag(flag_being_held)
+				get_parent().get_parent().drop_flag(flag_being_held, global_position)
 				flag_being_held = null
+			position = spawn_cords
 			return
 		GameManager.dead_cpus.append(self)
 		visible = false

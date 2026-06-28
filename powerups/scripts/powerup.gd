@@ -35,6 +35,7 @@ func _on_timer_timeout() -> void:
 	if spawnedSpot == null:
 		print("Spawned Spot Null")
 		playerAffected.reset_base_stats()
+		playerAffected.next_shot_power = false
 		queue_free()
 		return
 	spawnedSpot.hasItem = false

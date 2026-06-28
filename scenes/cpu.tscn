@@ -197,6 +197,9 @@ scale_curve = SubResource("CurveTexture_n3826")
 color = Color(0.5953306, 0.84631693, 0.9641729, 1)
 color_ramp = SubResource("GradientTexture1D_4tcor")
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_n3826"]
+radius = 359.01672
+
 [node name="CPU" type="CharacterBody2D" unique_id=1072216560]
 collision_layer = 3
 collision_mask = 9
@@ -329,6 +332,13 @@ one_shot = true
 [node name="RespawnTimer" type="Timer" parent="." unique_id=1284391784]
 wait_time = 2.0
 one_shot = true
+
+[node name="PriorityTarger" type="Area2D" parent="." unique_id=162169662]
+collision_layer = 2
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PriorityTarger" unique_id=1428957420]
+shape = SubResource("CircleShape2D_n3826")
 
 [connection signal="timeout" from="UpdateTarget" to="." method="_on_update_target_timeout"]
 [connection signal="timeout" from="RespawnTimer" to="." method="restart"]
