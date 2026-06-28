@@ -27,7 +27,10 @@ func _on_player_hit_body_entered(body: Node2D) -> void:
 		if body == fired_by:
 			return
 		var hitPlayerID = str(body.name).to_int()
-		if GameManager.Players.has(hitPlayerID):
-			var playerName = GameManager.Players[hitPlayerID].name
+		print(body.name)
+		if body.has_method("cpu_takeDamage"):
+			body.cpu_takeDamage(1)
+		elif GameManager.Players.has(hitPlayerID):
 			body.takeDamage.rpc(hitPlayerID, 1)
+		
 	queue_free()

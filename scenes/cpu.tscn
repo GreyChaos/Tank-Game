@@ -5,13 +5,19 @@
 [ext_resource type="Texture2D" uid="uid://dfbpgeo8ctiuc" path="res://assets/sprites/Tank4.png" id="3_nj8wu"]
 [ext_resource type="Texture2D" uid="uid://bg57tiod6udr1" path="res://assets/sprites/Tank3.png" id="4_iwjtb"]
 [ext_resource type="Texture2D" uid="uid://dd7i63xi586pc" path="res://assets/sprites/Tank2.png" id="5_4v60x"]
+[ext_resource type="Texture2D" uid="uid://dx2wnfj4r2b38" path="res://assets/sprites/hearts.png" id="6_xrgt0"]
+[ext_resource type="AudioStream" uid="uid://ic80v0wl4wn3" path="res://assets/sounds/hitHurt.wav" id="7_y0gcw"]
+[ext_resource type="Texture2D" uid="uid://b8tmybgboehiw" path="res://assets/sprites/Hats/map1_hat.png" id="8_so2p1"]
+[ext_resource type="Texture2D" uid="uid://binc56nicxmf3" path="res://assets/sprites/Hats/map2_hat.png" id="9_ueqc4"]
+[ext_resource type="Texture2D" uid="uid://btdfyakf67706" path="res://assets/sprites/Hats/map3_hat.png" id="10_xu88q"]
+[ext_resource type="Texture2D" uid="uid://clgrjl6hqlp86" path="res://assets/sprites/Hats/map5_hat.png" id="11_totj4"]
 
-[sub_resource type="Gradient" id="Gradient_4u4td"]
+[sub_resource type="Gradient" id="Gradient_cecf2"]
 offsets = PackedFloat32Array(0, 0.5344828, 0.74712646, 1)
 colors = PackedColorArray(1, 1, 1, 1, 0.5107427, 0.5107427, 0.5107427, 1, 0.31609195, 0.31609195, 0.31609195, 1, 0, 0, 0, 1)
 
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_gym88"]
-gradient = SubResource("Gradient_4u4td")
+gradient = SubResource("Gradient_cecf2")
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_k5r05"]
 particle_flag_disable_z = true
@@ -74,7 +80,123 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_4u4td"]
 size = Vector2(50, 48)
 
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_uvs2i"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath("Name:text")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+properties/3/path = NodePath("TankSprite:modulate")
+properties/3/spawn = true
+properties/3/replication_mode = 2
+properties/4/path = NodePath("TankSprite:animation")
+properties/4/spawn = true
+properties/4/replication_mode = 2
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_crs0q"]
+atlas = ExtResource("6_xrgt0")
+region = Rect2(0, 0, 48, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gym88"]
+atlas = ExtResource("6_xrgt0")
+region = Rect2(0, 16, 48, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rhptn"]
+atlas = ExtResource("6_xrgt0")
+region = Rect2(0, 32, 48, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ostwh"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_crs0q")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gym88")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rhptn")
+}],
+"loop": 0,
+"name": &"Heath",
+"speed": 5.0
+}]
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_md1gn"]
+particle_flag_disable_z = true
+emission_shape = 1
+emission_sphere_radius = 1.0
+inherit_velocity_ratio = 0.306
+direction = Vector3(0, 0, 0)
+spread = 114.729
+flatness = 0.126
+gravity = Vector3(10, 2, 10)
+radial_accel_min = 39.999996
+radial_accel_max = 49.999996
+color_ramp = SubResource("GradientTexture1D_gym88")
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_7encq"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("8_so2p1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_ueqc4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_xu88q")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_so2p1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_totj4")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5xcbj"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6ty3v"]
+size = Vector2(50, 48)
+
+[sub_resource type="Gradient" id="Gradient_gg0j1"]
+offsets = PackedFloat32Array(0.44585988, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_4tcor"]
+gradient = SubResource("Gradient_gg0j1")
+
+[sub_resource type="Curve" id="Curve_2oq5h"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_n3826"]
+curve = SubResource("Curve_2oq5h")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_pw20l"]
+lifetime_randomness = 0.5
+particle_flag_disable_z = true
+spread = 180.0
+initial_velocity_min = 100.0
+initial_velocity_max = 500.0
+gravity = Vector3(0, 0, 0)
+scale_min = 20.0
+scale_max = 30.0
+scale_curve = SubResource("CurveTexture_n3826")
+color = Color(0.5953306, 0.84631693, 0.9641729, 1)
+color_ramp = SubResource("GradientTexture1D_4tcor")
+
 [node name="CPU" type="CharacterBody2D" unique_id=1072216560]
+collision_layer = 3
+collision_mask = 9
 script = ExtResource("1_4u4td")
 
 [node name="ShootParticle" type="GPUParticles2D" parent="." unique_id=276773443]
@@ -118,5 +240,85 @@ autostart = true
 [node name="RayCast2D" type="RayCast2D" parent="." unique_id=2017599146]
 target_position = Vector2(335, 0)
 collision_mask = 2
+
+[node name="BulletSpawn2" type="Node2D" parent="." unique_id=1244407971]
+position = Vector2(28, -2.999998)
+rotation = -0.059302896
+
+[node name="BulletSpawn3" type="Node2D" parent="." unique_id=377846030]
+position = Vector2(29, 3.999998)
+rotation = 1.9092509
+
+[node name="Name" type="RichTextLabel" parent="." unique_id=509744476]
+offset_left = -28.0
+offset_top = -51.0
+offset_right = 75.0
+offset_bottom = -21.0
+rotation = 1.5707964
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+text = "CPU"
+fit_content = true
+scroll_active = false
+horizontal_alignment = 1
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1704179443]
+replication_config = SubResource("SceneReplicationConfig_uvs2i")
+
+[node name="Hearts" type="AnimatedSprite2D" parent="." unique_id=1295232844]
+position = Vector2(-56, 0)
+rotation = 1.5707964
+sprite_frames = SubResource("SpriteFrames_ostwh")
+animation = &"Heath"
+
+[node name="hitSound" type="AudioStreamPlayer2D" parent="." unique_id=758270545]
+stream = ExtResource("7_y0gcw")
+
+[node name="DamageParticle" type="GPUParticles2D" parent="." unique_id=1784132942]
+z_index = 2
+position = Vector2(0, 7.999996)
+scale = Vector2(28.763985, 26.489086)
+emitting = false
+amount = 100
+lifetime = 0.5
+one_shot = true
+trail_enabled = true
+trail_lifetime = 0.1
+process_material = SubResource("ParticleProcessMaterial_md1gn")
+
+[node name="Hat" type="AnimatedSprite2D" parent="." unique_id=358074132]
+visible = false
+z_index = 2
+position = Vector2(0.405, 7.475)
+scale = Vector2(1.4, 1.4)
+sprite_frames = SubResource("SpriteFrames_7encq")
+
+[node name="DestoryIfSink" type="Area2D" parent="." unique_id=522067541]
+collision_layer = 8
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DestoryIfSink" unique_id=1497165696]
+position = Vector2(-7, -1)
+shape = SubResource("RectangleShape2D_5xcbj")
+
+[node name="FlagDectection" type="Area2D" parent="." unique_id=1271664974]
+collision_layer = 16384
+collision_mask = 16384
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FlagDectection" unique_id=566999125]
+position = Vector2(-8, 1)
+shape = SubResource("RectangleShape2D_6ty3v")
+
+[node name="PowerupPartical" type="GPUParticles2D" parent="." unique_id=555298647]
+emitting = false
+amount = 10
+one_shot = true
+explosiveness = 1.0
+randomness = 0.5
+process_material = SubResource("ParticleProcessMaterial_pw20l")
+
+[node name="DamageCooldown" type="Timer" parent="." unique_id=1189117987]
+wait_time = 1.6999999999999995
+one_shot = true
 
 [connection signal="timeout" from="UpdateTarget" to="." method="_on_update_target_timeout"]

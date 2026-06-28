@@ -22,6 +22,7 @@ func gameOver() -> void:
 		GameManager.Players[multiplayer.get_unique_id()].hat = $"../..".winning_hat
 		GameManager.Players[multiplayer.get_unique_id()].playerObject.winner()
 		GameManager.Players[multiplayer.get_unique_id()].wasWinner = true
+		
 
 
 func _on_restart_timer_timeout() -> void:

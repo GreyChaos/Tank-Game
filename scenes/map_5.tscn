@@ -48,6 +48,7 @@ point_count = 16
 [node name="Map5" type="Node2D" unique_id=479648284]
 script = ExtResource("1_eg1we")
 PlayerScene = ExtResource("2_2gudk")
+winning_hat = 4
 
 [node name="Boundries" type="StaticBody2D" parent="." unique_id=3303298]
 

@@ -117,7 +117,7 @@ animations = [{
 offsets = PackedFloat32Array(0, 0.5344828, 0.74712646, 1)
 colors = PackedColorArray(1, 1, 1, 1, 0.5107427, 0.5107427, 0.5107427, 1, 0.31609195, 0.31609195, 0.31609195, 1, 0, 0, 0, 1)
 
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_gym88"]
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_utbjn"]
 gradient = SubResource("Gradient_crs0q")
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_crs0q"]
@@ -131,7 +131,14 @@ flatness = 0.126
 gravity = Vector3(10, 2, 10)
 radial_accel_min = 39.999996
 radial_accel_max = 49.999996
-color_ramp = SubResource("GradientTexture1D_gym88")
+color_ramp = SubResource("GradientTexture1D_utbjn")
+
+[sub_resource type="Gradient" id="Gradient_4u4td"]
+offsets = PackedFloat32Array(0, 0.5344828, 0.74712646, 1)
+colors = PackedColorArray(1, 1, 1, 1, 0.5107427, 0.5107427, 0.5107427, 1, 0.31609195, 0.31609195, 0.31609195, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_xjyf6"]
+gradient = SubResource("Gradient_4u4td")
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_gym88"]
 particle_flag_disable_z = true
@@ -144,7 +151,7 @@ flatness = 0.126
 gravity = Vector3(10, 2, 10)
 radial_accel_min = 39.999996
 radial_accel_max = 49.999996
-color_ramp = SubResource("GradientTexture1D_gym88")
+color_ramp = SubResource("GradientTexture1D_xjyf6")
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_4tcor"]
 animations = [{
@@ -178,14 +185,14 @@ size = Vector2(50, 48)
 offsets = PackedFloat32Array(0.44585988, 1)
 colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
 
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_4tcor"]
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_5c4u7"]
 gradient = SubResource("Gradient_utbjn")
 
 [sub_resource type="Curve" id="Curve_xjyf6"]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
 point_count = 2
 
-[sub_resource type="CurveTexture" id="CurveTexture_n3826"]
+[sub_resource type="CurveTexture" id="CurveTexture_l3dsg"]
 curve = SubResource("Curve_xjyf6")
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_5c4u7"]
@@ -197,9 +204,9 @@ initial_velocity_max = 500.0
 gravity = Vector3(0, 0, 0)
 scale_min = 20.0
 scale_max = 30.0
-scale_curve = SubResource("CurveTexture_n3826")
+scale_curve = SubResource("CurveTexture_l3dsg")
 color = Color(0.5953306, 0.84631693, 0.9641729, 1)
-color_ramp = SubResource("GradientTexture1D_4tcor")
+color_ramp = SubResource("GradientTexture1D_5c4u7")
 
 [node name="PlayerTank" type="CharacterBody2D" unique_id=1389244457]
 collision_layer = 3
@@ -322,4 +329,9 @@ explosiveness = 1.0
 randomness = 0.5
 process_material = SubResource("ParticleProcessMaterial_5c4u7")
 
+[node name="RespawnTimer" type="Timer" parent="." unique_id=1520663226]
+wait_time = 2.0
+one_shot = true
+
 [connection signal="timeout" from="DamageCooldown" to="." method="_on_damage_cooldown_timeout"]
+[connection signal="timeout" from="RespawnTimer" to="." method="restart"]

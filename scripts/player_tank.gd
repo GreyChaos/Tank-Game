@@ -57,7 +57,7 @@ func _on_synchronized():
 func _physics_process(delta: float) -> void:
 	if $MultiplayerSynchronizer.get_multiplayer_authority() == multiplayer.get_unique_id():
 		#Debug K to Kill
-		if Input.is_action_just_pressed("kill_player"):
+		if Input.is_action_just_pressed("kill_player") and multiplayer.is_server():
 			takeDamage.rpc(multiplayer.get_unique_id(), 3)
 		# Handle shoot.
 		if Input.is_action_just_pressed("shoot") or $ShootCooldown.wait_time == .1:
@@ -163,7 +163,10 @@ func takeDamage(hitPlayerID: int, damageAmount: int):
 	$hitSound.play()
 	if currentHealth <= 0:
 		if GameManager.current_gamemode == SceneManager.GameMode.CTF:
-			restart()
+			visible = false
+			set_physics_process(false)
+			$CollisionShape2D.set_deferred("disabled", true)
+			$RespawnTimer.start()
 			position = spawn_cords
 			if flag_being_held != null:
 				get_parent().get_parent().reset_flag(flag_being_held)
