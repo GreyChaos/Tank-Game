@@ -11,7 +11,8 @@ signal switchMaps(mapString: String)
 var Powerups = []
 var TeamA = []
 var TeamB = []
-var CPU_count = 7
+var CPU_count = 0
+var current_map = null
 
 var current_gamemode: SceneManager.GameMode = SceneManager.GameMode.FFA
 

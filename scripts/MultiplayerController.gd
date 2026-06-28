@@ -73,6 +73,7 @@ func StartGame(mapPath: String):
 		currentScene.queue_free()
 	$CountScreen/Timer.start()
 	$CountScreen.visible = true
+	GameManager.current_map = mapPath
 	mapChoice = mapPath
 	
 	

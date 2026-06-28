@@ -29,7 +29,13 @@ func gameOver() -> void:
 func _on_restart_timer_timeout() -> void:
 	if multiplayer.is_server():
 		cleanup_data.rpc()
-		GameManager.switchMaps.emit(GameManager.MAPS[randi_range(0, GameManager.MAPS.size() - 1)])
+		# Exclude current map from rotation
+		print(GameManager.current_map)
+		print(GameManager.MAPS)
+		var valid_maps = GameManager.MAPS.duplicate()
+		valid_maps.erase(str(GameManager.current_map))
+		print(valid_maps)
+		GameManager.switchMaps.emit(valid_maps[randi_range(0, GameManager.MAPS.size() - 2)])
 		
 
 @rpc("authority", "call_local", "reliable")
