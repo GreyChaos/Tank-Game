@@ -6,6 +6,5 @@
 [resource]
 script = ExtResource("1_ujb03")
 name = "Shield"
+length = 3.0
 texture = ExtResource("2_ujb03")
-fire_to_trigger = true
-use_timer = false

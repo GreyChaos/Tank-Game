@@ -109,8 +109,6 @@ func _physics_process(delta: float) -> void:
 func spawnShell(spawnPOS: Vector2, spawnROT: float):
 	if next_shot_power:
 		next_shot_power = false
-		if powerData.name == "Shield":
-			$Shield.visible = true
 		if powerData.name == "Nuke":
 			if multiplayer.is_server():
 				for i in range(25):
@@ -165,6 +163,8 @@ func apply_powerup(powerup: PowerupData):
 	$ShootCooldown.wait_time = powerup.shoot_speed
 	# Shell Data
 	next_shot_power = powerup.fire_to_trigger
+	if powerData.name == "Shield":
+		$Shield.visible = true
 	
 func reset_base_stats():
 	SPEED = 75.0
