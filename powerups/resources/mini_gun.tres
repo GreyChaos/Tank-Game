@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="PowerupData" format=3 uid="uid://ckcl58dn4pu2k"]
+
+[ext_resource type="Script" uid="uid://bwxuv2lrc06uk" path="res://powerups/scripts/powerup_data.gd" id="1_1h8ny"]
+[ext_resource type="Texture2D" uid="uid://tdfc1y1cfa6n" path="res://powerups/sprites/shootfastPower.png" id="2_ns07a"]
+
+[resource]
+script = ExtResource("1_1h8ny")
+name = "Speed Boost"
+shoot_speed = 0.1
+length = 7.0
+texture = ExtResource("2_ns07a")

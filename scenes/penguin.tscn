@@ -13,7 +13,7 @@ size = Vector2(25.604198, 28.452887)
 size = Vector2(50.54192, 28.452887)
 
 [node name="Penguin" type="Sprite2D" unique_id=1134723458]
-rotation = 1.8461168
+rotation = 1.5866973
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("1_ghsx3")
 script = ExtResource("2_o7lby")

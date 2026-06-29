@@ -2,7 +2,7 @@ extends CharacterBody2D
 class_name PlayerTank
 # base 75
 var SPEED = 75.0
-var ROTATESPEED = 75.0 / 3
+var ROTATESPEED = 1.1
 const SHELLSCENE = preload("res://scenes/shell.tscn")
 var currentHealth = 3
 var maxHealth = 3
@@ -71,11 +71,21 @@ func _physics_process(delta: float) -> void:
 			
 		# Handle foward/back
 		var direction := Input.get_axis("backward", "foward")
-		if direction:
+		var force_direction = false
+		if powerData != null:
+			if powerData.forced_direction == PowerupData.Direction.Forward or powerData.forced_direction == PowerupData.Direction.Backwards:
+				force_direction = true
+		if direction or force_direction:
 			if direction > 0:
 				$TankSprite.play("moving_foward")
 			elif direction < 0:
 				$TankSprite.play("moving_backward")
+			# Force Direction From Powerup
+			if powerData != null:
+				if powerData.forced_direction == PowerupData.Direction.Forward:
+					direction = 1
+				elif powerData.forced_direction == PowerupData.Direction.Backwards:
+					direction = -1
 			velocity = Vector2.UP.rotated(rotation) * direction * SPEED
 		else:
 			$TankSprite.play("idle")
@@ -83,9 +93,14 @@ func _physics_process(delta: float) -> void:
 			
 		# Handle rotation
 		var rotationamount := Input.get_axis("left", "right")
+		# Force Rotation From Powerup
+		if powerData != null:
+			if powerData.forced_direction == PowerupData.Direction.Left:
+				rotationamount = 1
+			elif powerData.forced_direction == PowerupData.Direction.Right:
+				rotationamount = -1
 		if rotationamount:
-			rotation += rotationamount * delta
-
+			rotation += rotationamount * delta * ROTATESPEED
 		move_and_slide()
 
 @rpc("any_peer", "call_local", "reliable")
@@ -140,7 +155,7 @@ func apply_powerup(powerup: PowerupData):
 			$Hearts.frame = 0
 	# Speed
 	SPEED = powerup.move_speed
-	ROTATESPEED = powerup.move_speed / 5
+	ROTATESPEED = powerup.rotate_speed
 	# Shoot Time
 	$ShootCooldown.wait_time = powerup.shoot_speed
 	# Shell Data
@@ -148,7 +163,7 @@ func apply_powerup(powerup: PowerupData):
 	
 func reset_base_stats():
 	SPEED = 75.0
-	ROTATESPEED = 75.0 / 3
+	ROTATESPEED = 1
 	$ShootCooldown.wait_time = .6
 	powerData = null
 	

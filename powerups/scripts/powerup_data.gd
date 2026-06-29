@@ -1,6 +1,14 @@
 extends Resource
 class_name PowerupData
 
+enum Direction{
+	Forward,
+	Backwards,
+	Left,
+	Right,
+	None
+}
+
 @export var name: String = "Powerup"
 @export var shoot_speed: float = 0.6
 @export var length: float = 5.0
@@ -13,3 +21,5 @@ class_name PowerupData
 @export var fire_to_trigger = false
 @export var use_timer = true
 @export var damage_shooter = false
+@export var rotate_speed = 1
+@export var forced_direction: Direction = Direction.None
