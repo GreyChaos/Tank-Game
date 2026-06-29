@@ -3,6 +3,7 @@ extends Control
 var Address
 var peer
 var currentScene
+signal server_data_received(data)
 
 @export var port = 8910
 
@@ -19,6 +20,20 @@ func _ready() -> void:
 	load_player_settings()
 
 
+func _physics_process(_delta: float) -> void:
+	if Input.is_action_just_pressed("disconnect") and GameManager.game_in_progress:
+		if multiplayer.is_server():
+			_on_cancel_button_down()
+			$MapContainer.get_child(0).queue_free()
+			self.show()
+			$CountScreen.visible = false
+			GameManager.Players.clear()
+			GameManager.game_in_progress = false
+		else:
+			disconnect_client.rpc()
+			$JoinScreen/Disconnect.visible = false
+
+
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
 	$CountScreen/Countdown.text = "Starting in: " + "%0.1f" % $CountScreen/Timer.time_left
@@ -31,18 +46,76 @@ func peer_connected(id):
 
 # Server And Client
 func peer_disconnected(id):
+	# The host disconnected or player asked to be kicked
+	if id == 1:
+		if GameManager.game_in_progress:
+			self.show()
+			GameManager.game_in_progress = false
+		multiplayer.multiplayer_peer = null
+		$JoinScreen/JoinError.text = "Disconnected"
+		$"Player List".visible = false
+		$JoinScreen/Server.editable = true
+		$JoinScreen/Join.visible = true
+		$JoinScreen/Back.visible = true
+		GameManager.Players.clear()
+		$JoinScreen/Disconnect.visible = false
+		$CountScreen.visible = false
+	# The client disconnected
 	print("Player Disconnected " + str(id))
-
+	var listText = "Players"
+	if multiplayer.is_server():
+		if GameManager.Players.has(id):
+			if GameManager.Players[id].playerObject != null:
+				GameManager.Players[id].playerObject.queue_free()
+		$"HostScreen/CPU Slider".tick_count = 8 - GameManager.Players.size()
+		$"HostScreen/CPU Slider".max_value = 8 - GameManager.Players.size()
+	if id in GameManager.Players:
+		GameManager.Players.erase(id)
+	for player in GameManager.Players:
+		listText += ("\n" + GameManager.Players[player].name)
+	$"Player List".text = listText
 
 # Client
 func connected_to_server():
-	print("Connected")
-	SendPlayerInfo.rpc_id(1, $CustomizeScreen/CustomizeMenu/Name.text, multiplayer.get_unique_id(), $CustomizeScreen/CustomizeMenu/Tank1.modulate)
+	# Ask Server if its good to join
+	request_data.rpc_id(1, 1)
+	var is_game_started = await server_data_received
+	if !is_game_started:
+		SendPlayerInfo.rpc_id(1, $CustomizeScreen/CustomizeMenu/Name.text, multiplayer.get_unique_id(), $CustomizeScreen/CustomizeMenu/Tank1.modulate)
+		$JoinScreen/JoinError.text = "Connected"
+		$JoinScreen/Disconnect.visible = true
+	else:
+		multiplayer.multiplayer_peer = null
+		$JoinScreen/JoinError.text = "Game Already Started"
+		$"Player List".visible = false
+		$JoinScreen/Server.editable = true
+		$JoinScreen/Join.visible = true
+		$JoinScreen/Back.visible = true
+
+
+@rpc("any_peer")
+func request_data(query_id: int):
+	var sender_id = multiplayer.get_remote_sender_id()
+	# Check if game is in progress, and can join
+	var data
+	if query_id == 1:
+		data = GameManager.game_in_progress
+	rpc_id(sender_id, "recieve_data_from_server", data)
+
+
+@rpc("authority")
+func recieve_data_from_server(data):
+	server_data_received.emit(data)
 
 
 # Client
 func connection_failed():
-	print("Connection Failed")
+	multiplayer.multiplayer_peer = null
+	$JoinScreen/JoinError.text = "Connection Failed"
+	$"Player List".visible = false
+	$JoinScreen/Server.editable = true
+	$JoinScreen/Join.visible = true
+	$JoinScreen/Back.visible = true
 
 
 @rpc("any_peer", "reliable")
@@ -69,12 +142,14 @@ func SendPlayerInfo(player_name, id, custom_color: Color):
 
 @rpc("any_peer", "call_local", "reliable")
 func StartGame(mapPath: String):
+	$MapSpawner.spawn_path = "../MapContainer"
 	if currentScene != null:
 		currentScene.queue_free()
 	$CountScreen/Timer.start()
 	$CountScreen.visible = true
 	GameManager.current_map = mapPath
 	mapChoice = mapPath
+	GameManager.game_in_progress = true
 	
 	
 @rpc("any_peer", "call_local", "reliable")
@@ -89,6 +164,18 @@ func ContinueGame(mapPath: String):
 	await get_tree().process_frame
 	_on_start_timer_timeout()
 	
+@rpc("authority", "reliable")
+func server_shutting_down():
+	multiplayer.multiplayer_peer = null
+	$JoinScreen/JoinError.text = "Server Shutdown"
+	$"Player List".visible = false
+	$JoinScreen/Server.editable = true
+	$JoinScreen/Join.visible = true
+	$JoinScreen/Back.visible = true
+	$JoinScreen/Disconnect.visible = false
+	GameManager.Players.clear()
+	self.show()
+	$CountScreen.visible = false
 
 
 func _on_start_button_down() -> void:
@@ -100,9 +187,11 @@ func _on_join_button_down() -> void:
 	$ButtonClicked.play()
 	peer = ENetMultiplayerPeer.new()
 	peer.create_client($JoinScreen/Server.text, port)
+	peer.get_peer(1).set_timeout(0, 0, 5000)
 	peer.get_host().compress(ENetConnection.COMPRESS_RANGE_CODER)
 	multiplayer.set_multiplayer_peer(peer)
 	save_player_settings()
+	$JoinScreen/JoinError.text = ""
 	$"Player List".visible = true
 	$JoinScreen/Server.editable = false
 	$JoinScreen/Join.visible = false
@@ -114,7 +203,7 @@ func _on_host_button_down() -> void:
 
 	var error = peer.create_server(port, 8)
 	if error != OK:
-		print("Cant Host: " + error)
+		print("Cant Host: " + str(error))
 		return
 
 	peer.get_host().compress(ENetConnection.COMPRESS_RANGE_CODER)
@@ -126,6 +215,7 @@ func _on_host_button_down() -> void:
 	$HostScreen/Start.visible = true
 	$HostScreen/Host.visible = false
 	$HostScreen/Back.visible = false
+	$HostScreen/Cancel.visible = true
 
 func _on_join_menu_button_down() -> void:
 	$ButtonClicked.play()
@@ -185,9 +275,6 @@ func _on_name_text_changed(new_text: String) -> void:
 
 
 func _on_start_timer_timeout() -> void:
-	var cam = get_node_or_null("Camera2D")
-	if is_instance_valid(cam):
-		cam.queue_free()
 	$Music.stop()
 	self.hide()
 	if multiplayer.is_server():
@@ -250,6 +337,7 @@ func _on_back_button_down() -> void:
 	$JoinScreen.visible = false
 	$HostScreen.visible = false
 	$SettingsScreen.visible = false
+	$JoinScreen/JoinError.text = ""
 
 
 func _on_h_slider_value_changed(value: float) -> void:
@@ -269,3 +357,27 @@ func _on_toggle_fullscreen_button_down() -> void:
 
 func _on_cpu_slider_value_changed(value: float) -> void:
 	GameManager.CPU_count = value
+
+
+func _on_cancel_button_down() -> void:
+	server_shutting_down.rpc()
+	multiplayer.multiplayer_peer.close()
+	$ButtonClicked.play()
+	multiplayer.multiplayer_peer = null
+	$HostScreen/Cancel.visible = false
+	$HostScreen/Back.visible = true
+	$HostScreen/Start.visible = false
+	$HostScreen/Host.visible = true
+	GameManager.Players.clear()
+	$"Player List".visible = false
+
+
+func _on_disconnect_button_down() -> void:
+	$ButtonClicked.play()
+	disconnect_client.rpc()
+	$JoinScreen/Disconnect.visible = false
+
+@rpc("any_peer", "reliable")
+func disconnect_client():
+	if multiplayer.is_server():
+		multiplayer.multiplayer_peer.disconnect_peer(multiplayer.get_remote_sender_id())

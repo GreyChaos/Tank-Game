@@ -60,7 +60,7 @@ func get_closest_player() -> Vector2:
 	var closest_player_distance = INF
 	var closest_player_cords = Vector2.ZERO
 	# If you have the flag, run home
-	if flag_being_held:
+	if flag_being_held and GameManager.current_gamemode == SceneManager.GameMode.CTF:
 		if GameManager.TeamA.has(self):
 			var flagSpot = $"../../".get_team_flag(FlagSpot.TeamLabel.A)
 			return flagSpot.global_position
@@ -78,19 +78,20 @@ func get_closest_player() -> Vector2:
 			if !flagSpot.has_flag or flagSpot.starting_flag_spot != flagSpot.global_position:
 				return flagSpot.local_flag.global_position
 	# Check for enemy flag if CTF and enemy not within PriorityTrigger
-	var bodies_in_priority = $PriorityTarger.get_overlapping_bodies()
-	for body in bodies_in_priority:
-		if body in GameManager.DeadPlayers:
-			continue
-		if GameManager.TeamA.has(self) and GameManager.TeamA.has(body):
-			continue
-		if GameManager.TeamB.has(self) and GameManager.TeamB.has(body):
-			continue
-		if GameManager.TeamA.has(self) and GameManager.TeamA.has(body):
-			continue
-		if GameManager.TeamB.has(self) and GameManager.TeamB.has(body):
-			continue
-		return body.global_position
+	if GameManager.current_gamemode == SceneManager.GameMode.CTF:
+		var bodies_in_priority = $PriorityTarger.get_overlapping_bodies()
+		for body in bodies_in_priority:
+			if body in GameManager.DeadPlayers:
+				continue
+			if GameManager.TeamA.has(self) and GameManager.TeamA.has(body):
+				continue
+			if GameManager.TeamB.has(self) and GameManager.TeamB.has(body):
+				continue
+			if GameManager.TeamA.has(self) and GameManager.TeamA.has(body):
+				continue
+			if GameManager.TeamB.has(self) and GameManager.TeamB.has(body):
+				continue
+			return body.global_position
 	# Continue to flag
 	if GameManager.current_gamemode == SceneManager.GameMode.CTF:
 		if GameManager.TeamA.has(self):

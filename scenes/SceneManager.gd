@@ -19,7 +19,6 @@ func _ready() -> void:
 		spawnPoints.shuffle()
 	if multiplayer.is_server():
 		spawn_players(spawnPoints)
-	print(winning_hat)
 
 func spawn_players(spawnPoints : Array) -> void:
 	var index = 0
