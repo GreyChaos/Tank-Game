@@ -1,6 +1,6 @@
 extends CharacterBody2D
 class_name PlayerTank
-# base 75
+
 var SPEED = 75.0
 var ROTATESPEED = 1.1
 const SHELLSCENE = preload("res://scenes/shell.tscn")

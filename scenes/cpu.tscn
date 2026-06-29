@@ -341,4 +341,5 @@ collision_mask = 2
 shape = SubResource("CircleShape2D_n3826")
 
 [connection signal="timeout" from="UpdateTarget" to="." method="_on_update_target_timeout"]
+[connection signal="timeout" from="DamageCooldown" to="." method="_on_damage_cooldown_timeout"]
 [connection signal="timeout" from="RespawnTimer" to="." method="restart"]

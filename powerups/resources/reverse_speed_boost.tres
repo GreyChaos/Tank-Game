@@ -8,4 +8,5 @@ script = ExtResource("1_ao4nl")
 name = "Reverse Speed Boost"
 move_speed = 150.0
 texture = ExtResource("2_ao4nl")
+rotate_speed = 0.25
 forced_direction = 1

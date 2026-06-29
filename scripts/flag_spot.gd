@@ -26,9 +26,9 @@ func _on_area_entered(area: Area2D) -> void:
 	var player = area.get_parent()
 	if player is CharacterBody2D:
 		# Check to see if player can return flag
-		if GameManager.TeamA.has(player) and team == TeamLabel.A and global_position != starting_flag_spot:
+		if GameManager.TeamA.has(player) and team == TeamLabel.A and global_position != starting_flag_spot and has_flag:
 			reset_flag()
-		if GameManager.TeamB.has(player) and team == TeamLabel.B and global_position != starting_flag_spot:
+		if GameManager.TeamB.has(player) and team == TeamLabel.B and global_position != starting_flag_spot and has_flag:
 			reset_flag()
 		# Check to see if player can pick up flag
 		if has_flag and player.flag_being_held == null:

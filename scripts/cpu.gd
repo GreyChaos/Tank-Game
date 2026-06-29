@@ -182,5 +182,9 @@ func restart():
 	currentScale = 1
 	global_scale = Vector2(currentScale, currentScale)
 	
+func _on_damage_cooldown_timeout() -> void:
+	flashTween.pause()
+	modulate.a = 1.0
+	
 func change_name_color(color: Color):
 	$Name.modulate = color

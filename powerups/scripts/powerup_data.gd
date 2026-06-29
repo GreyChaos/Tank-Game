@@ -21,5 +21,5 @@ enum Direction{
 @export var fire_to_trigger = false
 @export var use_timer = true
 @export var damage_shooter = false
-@export var rotate_speed = 1
+@export var rotate_speed = 1.0
 @export var forced_direction: Direction = Direction.None
