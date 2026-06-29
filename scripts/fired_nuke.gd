@@ -1,5 +1,5 @@
 extends Node2D
-
+var damage_checked = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -9,7 +9,8 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	if $Nukemark.frame == 6:
+	if $Nukemark.frame == 6 and !damage_checked:
+		damage_checked = true
 		$GPUParticles2D.emitting = true
 		check_for_damage()
 
@@ -25,6 +26,7 @@ func _on_cleanup_timer_timeout() -> void:
 
 
 func check_for_damage():
+	$ExplodeNoise.play()
 	if !multiplayer.is_server():
 		return
 	for body in $Damage.get_overlapping_bodies():

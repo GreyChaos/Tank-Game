@@ -153,6 +153,7 @@ func cpu_deal_damage(damageAmount: int):
 	$hitSound.play()
 	if currentHealth <= 0:
 		if GameManager.current_gamemode == SceneManager.GameMode.CTF:
+			$DeathExplosion.emitting = true
 			visible = false
 			set_physics_process(false)
 			$CollisionShape2D.set_deferred("disabled", true)
@@ -162,11 +163,17 @@ func cpu_deal_damage(damageAmount: int):
 				flag_being_held = null
 			position = spawn_cords
 			return
+		_on_damage_cooldown_timeout()
+		
 		GameManager.dead_cpus.append(self)
-		visible = false
+		$Name.visible = false
+		$Hearts.visible = false
+		$TankSprite.visible = false
+		$DeathSprite.visible = true
+		$DeathExplosion.emitting = true
+		$DeathParticle.emitting = true
 		set_physics_process(false)
 		$CollisionShape2D.set_deferred("disabled", true)
-		queue_free()
 	else:
 		currentScale -= .05
 		global_scale = Vector2(currentScale, currentScale)

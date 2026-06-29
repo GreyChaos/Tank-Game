@@ -22,6 +22,7 @@ func _ready() -> void:
 		winner()
 	spawn_cords = global_position
 	$TankSprite.modulate = GameManager.Players[multiplayer.get_unique_id()].color
+	$DeathSprite.modulate = GameManager.Players[multiplayer.get_unique_id()].color
 	$Name.text = GameManager.Players[multiplayer.get_unique_id()].name
 	$MultiplayerSynchronizer.set_multiplayer_authority(str(name).to_int())
 	GameManager.Players[str(name).to_int()].playerObject = self
@@ -193,6 +194,7 @@ func deal_damage(hitPlayerID: int, damageAmount: int):
 	currentHealth -= damageAmount
 	$hitSound.play()
 	if currentHealth <= 0:
+		$DeathExplosion.emitting = true
 		if GameManager.current_gamemode == SceneManager.GameMode.CTF:
 			if flag_being_held != null:
 				get_parent().get_parent().drop_flag(flag_being_held, global_position)
@@ -203,8 +205,16 @@ func deal_damage(hitPlayerID: int, damageAmount: int):
 			$RespawnTimer.start()
 			position = spawn_cords
 			return
+		
 		GameManager.playerDied(GameManager.Players[hitPlayerID].id)
-		visible = false
+		_on_damage_cooldown_timeout()
+		rotation = 0
+		$Name.visible = false
+		$Hearts.visible = false
+		$TankSprite.visible = false
+		$DeathSprite.visible = true
+		$DeathParticle.emitting = true
+		$DeathExplosion.emitting = true
 		set_physics_process(false)
 		$CollisionShape2D.set_deferred("disabled", true)
 	else:

@@ -11,6 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://binc56nicxmf3" path="res://assets/sprites/Hats/map2_hat.png" id="9_ueqc4"]
 [ext_resource type="Texture2D" uid="uid://btdfyakf67706" path="res://assets/sprites/Hats/map3_hat.png" id="10_xu88q"]
 [ext_resource type="Texture2D" uid="uid://clgrjl6hqlp86" path="res://assets/sprites/Hats/map5_hat.png" id="11_totj4"]
+[ext_resource type="Texture2D" uid="uid://diohov7whtx2" path="res://assets/sprites/TankRubble.png" id="12_y0gcw"]
 
 [sub_resource type="Gradient" id="Gradient_cecf2"]
 offsets = PackedFloat32Array(0, 0.5344828, 0.74712646, 1)
@@ -99,6 +100,24 @@ properties/4/replication_mode = 2
 properties/5/path = NodePath("Name:modulate")
 properties/5/spawn = true
 properties/5/replication_mode = 2
+properties/6/path = NodePath("TankSprite:visible")
+properties/6/spawn = true
+properties/6/replication_mode = 2
+properties/7/path = NodePath("Hearts:visible")
+properties/7/spawn = true
+properties/7/replication_mode = 2
+properties/8/path = NodePath("Name:visible")
+properties/8/spawn = true
+properties/8/replication_mode = 2
+properties/9/path = NodePath("DeathParticle:emitting")
+properties/9/spawn = true
+properties/9/replication_mode = 2
+properties/10/path = NodePath("DeathExplosion:emitting")
+properties/10/spawn = true
+properties/10/replication_mode = 2
+properties/11/path = NodePath("DeathSprite:visible")
+properties/11/spawn = true
+properties/11/replication_mode = 2
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_crs0q"]
 atlas = ExtResource("6_xrgt0")
@@ -199,6 +218,60 @@ color_ramp = SubResource("GradientTexture1D_4tcor")
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_n3826"]
 radius = 359.01672
+
+[sub_resource type="Gradient" id="Gradient_so2p1"]
+offsets = PackedFloat32Array(0.07329843, 0.61256546, 0.90052354)
+colors = PackedColorArray(0.55952334, 8.904189e-07, 3.3691526e-07, 1, 0.05490196, 0.02745098, 0.019607844, 0.8039216, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_xoswo"]
+gradient = SubResource("Gradient_so2p1")
+
+[sub_resource type="Curve" id="Curve_ueqc4"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_4wgq8"]
+curve = SubResource("Curve_ueqc4")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_xu88q"]
+particle_flag_disable_z = true
+emission_shape = 1
+emission_sphere_radius = 31.12
+spread = 24.202
+initial_velocity_min = 10.78
+initial_velocity_max = 110.78
+gravity = Vector3(0, 0, 0)
+scale_min = 2.0
+scale_max = 5.0
+scale_curve = SubResource("CurveTexture_4wgq8")
+color_ramp = SubResource("GradientTexture1D_xoswo")
+
+[sub_resource type="Gradient" id="Gradient_totj4"]
+offsets = PackedFloat32Array(0.44585988, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_eiei5"]
+gradient = SubResource("Gradient_totj4")
+
+[sub_resource type="Curve" id="Curve_cecf2"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_chlut"]
+curve = SubResource("Curve_cecf2")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_uvs2i"]
+lifetime_randomness = 0.5
+particle_flag_disable_z = true
+spread = 180.0
+initial_velocity_min = 100.0
+initial_velocity_max = 500.0
+gravity = Vector3(0, 0, 0)
+scale_min = 20.0
+scale_max = 30.0
+scale_curve = SubResource("CurveTexture_chlut")
+color = Color(0.54509807, 0, 0, 1)
+color_ramp = SubResource("GradientTexture1D_eiei5")
 
 [node name="CPU" type="CharacterBody2D" unique_id=1072216560]
 collision_layer = 3
@@ -339,6 +412,28 @@ collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PriorityTarger" unique_id=1428957420]
 shape = SubResource("CircleShape2D_n3826")
+
+[node name="DeathParticle" type="GPUParticles2D" parent="." unique_id=151128503]
+z_index = 2
+position = Vector2(-1.1920929e-07, 6.9999995)
+rotation = -2.133775
+emitting = false
+amount = 35
+speed_scale = 0.5
+process_material = SubResource("ParticleProcessMaterial_xu88q")
+
+[node name="DeathExplosion" type="GPUParticles2D" parent="." unique_id=436083813]
+emitting = false
+amount = 50
+one_shot = true
+explosiveness = 1.0
+randomness = 0.5
+process_material = SubResource("ParticleProcessMaterial_uvs2i")
+
+[node name="DeathSprite" type="Sprite2D" parent="." unique_id=1566071880]
+visible = false
+z_index = 1
+texture = ExtResource("12_y0gcw")
 
 [connection signal="timeout" from="UpdateTarget" to="." method="_on_update_target_timeout"]
 [connection signal="timeout" from="DamageCooldown" to="." method="_on_damage_cooldown_timeout"]

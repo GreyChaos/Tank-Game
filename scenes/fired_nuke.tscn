@@ -2,6 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://d1lgne4er7lsl" path="res://powerups/sprites/nukemark.png" id="1_6m24o"]
 [ext_resource type="Script" uid="uid://bd7f0re4v3cw0" path="res://scripts/fired_nuke.gd" id="1_r67su"]
+[ext_resource type="AudioStream" uid="uid://cpl5uvkk7ayuh" path="res://assets/sounds/explosion 2.wav" id="3_guwko"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_guwko"]
 atlas = ExtResource("1_6m24o")
@@ -85,14 +86,14 @@ animations = [{
 offsets = PackedFloat32Array(0.44585988, 1)
 colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
 
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_xoswo"]
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_guwko"]
 gradient = SubResource("Gradient_r67su")
 
 [sub_resource type="Curve" id="Curve_guwko"]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
 point_count = 2
 
-[sub_resource type="CurveTexture" id="CurveTexture_4wgq8"]
+[sub_resource type="CurveTexture" id="CurveTexture_xoswo"]
 curve = SubResource("Curve_guwko")
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_v3n02"]
@@ -104,9 +105,9 @@ initial_velocity_max = 500.0
 gravity = Vector3(0, 0, 0)
 scale_min = 20.0
 scale_max = 30.0
-scale_curve = SubResource("CurveTexture_4wgq8")
+scale_curve = SubResource("CurveTexture_xoswo")
 color = Color(0.54509807, 0, 0, 1)
-color_ramp = SubResource("GradientTexture1D_xoswo")
+color_ramp = SubResource("GradientTexture1D_guwko")
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_v3n02"]
 radius = 48.010414
@@ -153,6 +154,10 @@ shape = SubResource("CircleShape2D_v3n02")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1148012620]
 replication_config = SubResource("SceneReplicationConfig_r67su")
+
+[node name="ExplodeNoise" type="AudioStreamPlayer2D" parent="." unique_id=1016555136]
+stream = ExtResource("3_guwko")
+max_distance = 500.0
 
 [connection signal="timeout" from="Falling Timer" to="." method="_on_falling_timer_timeout"]
 [connection signal="timeout" from="Cleanup Timer" to="." method="_on_cleanup_timer_timeout"]
