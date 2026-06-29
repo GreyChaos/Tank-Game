@@ -61,10 +61,12 @@ func _physics_process(delta: float) -> void:
 			SPEED = 300
 		#Debug K to Kill
 		if Input.is_action_just_pressed("kill_player") and multiplayer.is_server():
-			takeDamage.rpc(multiplayer.get_unique_id(), 3)
+			deal_damage.rpc(multiplayer.get_unique_id(), 3)
 		# Handle shoot.
 		if Input.is_action_just_pressed("shoot") or $ShootCooldown.wait_time == .1:
 			if $ShootCooldown.is_stopped():
+				if $Shield.visible: # Disable shield if shot fired
+					$Shield.visible = false
 				rpc("spawnShell", $BulletSpawn.global_position, $BulletSpawn.global_rotation)
 				$ShootCooldown.start()
 				
@@ -107,11 +109,14 @@ func _physics_process(delta: float) -> void:
 func spawnShell(spawnPOS: Vector2, spawnROT: float):
 	if next_shot_power:
 		next_shot_power = false
+		if powerData.name == "Shield":
+			$Shield.visible = true
 		if powerData.name == "Nuke":
-			for i in range(25):
-				var nuke = FIRED_NUKE.instantiate()
-				nuke.position = Vector2(randi_range(-576, 576), randi_range(-324, 324))
-				get_parent().add_child(nuke)
+			if multiplayer.is_server():
+				for i in range(25):
+					var nuke = FIRED_NUKE.instantiate()
+					nuke.position = Vector2(randi_range(-576, 576), randi_range(-324, 324))
+					get_parent().add_child(nuke, true)
 		if powerData.name == "Big Shot":
 			var shell = SHELLSCENE.instantiate()
 			shell.position = spawnPOS
@@ -167,9 +172,17 @@ func reset_base_stats():
 	$ShootCooldown.wait_time = .6
 	powerData = null
 	
+func currentlyShielded() -> bool:
+	if $Shield.visible:
+		$Shield.visible = false
+		return true
+	return false
+	
 
 @rpc("any_peer", "call_local", "reliable")
-func takeDamage(hitPlayerID: int, damageAmount: int):
+func deal_damage(hitPlayerID: int, damageAmount: int):
+	if GameManager.Players[hitPlayerID].playerObject.currentlyShielded():
+		return
 	# Flash while immune to damage
 	flashTween.play()
 	if !$DamageCooldown.is_stopped():
@@ -197,7 +210,7 @@ func takeDamage(hitPlayerID: int, damageAmount: int):
 	else:
 		currentScale -= .05
 		global_scale = Vector2(currentScale, currentScale)
-		
+	
 func winner():
 	$Hat.frame = GameManager.Players[multiplayer.get_unique_id()].hat
 	$Hat.visible = true

@@ -12,6 +12,7 @@
 [ext_resource type="Script" uid="uid://c8kxdqu3qf34s" path="res://scripts/camera.gd" id="9_rhptn"]
 [ext_resource type="Texture2D" uid="uid://binc56nicxmf3" path="res://assets/sprites/Hats/map2_hat.png" id="9_xjyf6"]
 [ext_resource type="Texture2D" uid="uid://clgrjl6hqlp86" path="res://assets/sprites/Hats/map5_hat.png" id="11_5c4u7"]
+[ext_resource type="Texture2D" uid="uid://cyhvsnyjpsvnj" path="res://powerups/sprites/shield.png" id="13_xjyf6"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_v3n02"]
 animations = [{
@@ -83,6 +84,9 @@ properties/5/replication_mode = 2
 properties/6/path = NodePath("Hat:frame")
 properties/6/spawn = true
 properties/6/replication_mode = 1
+properties/7/path = NodePath("Shield:visible")
+properties/7/spawn = true
+properties/7/replication_mode = 1
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_crs0q"]
 atlas = ExtResource("6_xdl87")
@@ -334,6 +338,13 @@ process_material = SubResource("ParticleProcessMaterial_5c4u7")
 [node name="RespawnTimer" type="Timer" parent="." unique_id=1520663226]
 wait_time = 2.0
 one_shot = true
+
+[node name="Shield" type="Sprite2D" parent="." unique_id=2123250326]
+visible = false
+z_index = 2
+position = Vector2(0, 3)
+scale = Vector2(2.4453125, 2.4453125)
+texture = ExtResource("13_xjyf6")
 
 [connection signal="timeout" from="DamageCooldown" to="." method="_on_damage_cooldown_timeout"]
 [connection signal="timeout" from="RespawnTimer" to="." method="restart"]

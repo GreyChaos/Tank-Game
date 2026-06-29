@@ -54,9 +54,9 @@ func _on_area_entered(area: Area2D) -> void:
 					if GameManager.TeamA.size() > 1:
 						$"..".start_broadcast("Congrats [color=AQUAMARINE]Team A[/color], but\nTHERE CAN ONLY BE ONE\nFREE FOR ALL!")
 					if playerb is PlayerTank:
-						playerb.takeDamage(str(playerb.name).to_int(), 10)
+						playerb.deal_damage(str(playerb.name).to_int(), 10)
 					else:
-						playerb.cpu_takeDamage(10)
+						playerb.cpu_deal_damage(10)
 					queue_free()
 		if GameManager.TeamB.has(player) and team == TeamLabel.B:
 			if player.flag_being_held != local_flag and player.flag_being_held != null:
@@ -66,9 +66,9 @@ func _on_area_entered(area: Area2D) -> void:
 					if GameManager.TeamB.size() > 1:
 						$"..".start_broadcast("Congrats [color=crimson]Team B[/color], but\nTHERE CAN ONLY BE ONE\nFREE FOR ALL!")
 					if playera is PlayerTank:
-						playera.takeDamage(str(playera.name).to_int(), 10)
+						playera.deal_damage(str(playera.name).to_int(), 10)
 					else:
-						playera.cpu_takeDamage(10)
+						playera.cpu_deal_damage(10)
 					queue_free()
 
 func reset_flag(): ## Resets flag back to original spot

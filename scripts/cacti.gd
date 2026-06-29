@@ -10,4 +10,4 @@ func _ready() -> void:
 
 func _on_body_entered(body: Node2D) -> void:
 	if body is CharacterBody2D:
-		body.takeDamage(str(body.name).to_int(), 1)
+		body.deal_damage(str(body.name).to_int(), 1)

@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="PowerupData" format=3 uid="uid://cndo66wrrphmy"]
+
+[ext_resource type="Script" uid="uid://bwxuv2lrc06uk" path="res://powerups/scripts/powerup_data.gd" id="1_ujb03"]
+[ext_resource type="Texture2D" uid="uid://cyhvsnyjpsvnj" path="res://powerups/sprites/shield.png" id="2_ujb03"]
+
+[resource]
+script = ExtResource("1_ujb03")
+name = "Shield"
+texture = ExtResource("2_ujb03")
+fire_to_trigger = true
+use_timer = false

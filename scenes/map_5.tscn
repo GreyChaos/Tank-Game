@@ -461,7 +461,7 @@ progress = 484.72
 [node name="PlayersContainer" type="Node2D" parent="." unique_id=1334976316]
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="." unique_id=465666254]
-_spawnable_scenes = PackedStringArray("uid://ip6213vm7nec", "uid://605afdu10blj")
+_spawnable_scenes = PackedStringArray("uid://ip6213vm7nec", "uid://605afdu10blj", "uid://drmyjugr4qjh3")
 spawn_path = NodePath("../PlayersContainer")
 
 [node name="NavigationRegion2D2" type="NavigationRegion2D" parent="." unique_id=815473754]

@@ -25,10 +25,10 @@ func crack_ice():
 		$Mask/Texture.frame += 1
 		for body in $Area2D.get_overlapping_areas():
 			if body is CharacterBody2D:
-				if body.has_method("cpu_takeDamage"):
-					body.cpu_takeDamage(10)
+				if body.has_method("cpu_deal_damage"):
+					body.cpu_deal_damage(10)
 				elif body.get_parent() is PlayerTank:
-					body.get_parent().takeDamage(str(body.get_parent().name).to_int(), 10)
+					body.get_parent().deal_damage(str(body.get_parent().name).to_int(), 10)
 			else:
 				body.get_parent().queue_free()
 	else:

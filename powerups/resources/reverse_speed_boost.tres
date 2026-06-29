@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="PowerupData" format=3 uid="uid://flcrqsw4whw1"]
+
+[ext_resource type="Script" uid="uid://bwxuv2lrc06uk" path="res://powerups/scripts/powerup_data.gd" id="1_ao4nl"]
+[ext_resource type="Texture2D" uid="uid://chempskhedv2n" path="res://powerups/sprites/reverseSpeedPower.png" id="2_ao4nl"]
+
+[resource]
+script = ExtResource("1_ao4nl")
+name = "Reverse Speed Boost"
+move_speed = 150.0
+texture = ExtResource("2_ao4nl")
+forced_direction = 1

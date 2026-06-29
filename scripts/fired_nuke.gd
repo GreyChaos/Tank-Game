@@ -25,12 +25,14 @@ func _on_cleanup_timer_timeout() -> void:
 
 
 func check_for_damage():
+	if !multiplayer.is_server():
+		return
 	for body in $Damage.get_overlapping_bodies():
 		if body is CharacterBody2D:
 			var hitPlayerID = str(body.name).to_int()
-			if body.has_method("cpu_takeDamage"):
-				body.cpu_takeDamage(2)
+			if body.has_method("cpu_deal_damage"):
+				body.cpu_deal_damage(2)
 			elif GameManager.Players.has(hitPlayerID):
-				body.takeDamage.rpc(hitPlayerID, 2)
+				body.deal_damage.rpc(hitPlayerID, 2)
 				
 				

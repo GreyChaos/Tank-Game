@@ -15,5 +15,5 @@ func _process(delta: float) -> void:
 
 func _on_shot_by_player_body_entered(body: Node2D) -> void:
 	if body.get_parent() is shell:
-		body.get_parent().fired_by.takeDamage(str(body.get_parent().fired_by.name).to_int(), 1)
+		body.get_parent().fired_by.deal_damage(str(body.get_parent().fired_by.name).to_int(), 1)
 	queue_free()

@@ -141,7 +141,7 @@ func spawnShell(spawnPOS: Vector2, spawnROT: float):
 
 
 @rpc("any_peer", "call_local", "reliable")
-func cpu_takeDamage(damageAmount: int):
+func cpu_deal_damage(damageAmount: int):
 	# Flash while immune to damage
 	flashTween.play()
 	if !$DamageCooldown.is_stopped():

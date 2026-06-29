@@ -23,13 +23,15 @@ func cleanShells() -> void:
 	queue_free()
 
 func _on_player_hit_body_entered(body: Node2D) -> void:
+	if !multiplayer.is_server():
+		return
 	if body is CharacterBody2D:
 		if body == fired_by:
 			return
 		var hitPlayerID = str(body.name).to_int()
-		if body.has_method("cpu_takeDamage"):
-			body.cpu_takeDamage(1)
+		if body.has_method("cpu_deal_damage"):
+			body.cpu_deal_damage(1)
 		elif GameManager.Players.has(hitPlayerID):
-			body.takeDamage.rpc(hitPlayerID, 1)
+			body.deal_damage.rpc(hitPlayerID, 1)
 		
 	queue_free()
