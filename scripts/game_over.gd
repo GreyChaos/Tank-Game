@@ -15,12 +15,16 @@ func gameOver() -> void:
 	$"../RestartText".visible = true
 	$"../../RestartTimer".start()
 	if GameManager.DeadPlayers.has(multiplayer.get_unique_id()):
+		$"../LosingSound".play()
 		$"../YouLose".visible = true
+		$"../Losing Particles".emitting = true
 		GameManager.Players[multiplayer.get_unique_id()].hat = $"../..".winning_hat
 		GameManager.Players[multiplayer.get_unique_id()].playerObject.loser()
 		GameManager.Players[multiplayer.get_unique_id()].wasWinner = false
 	else:
+		$"../VictorySound".play()
 		$"../YouWin".visible = true
+		$"../Victory Particles".emitting = true
 		GameManager.Players[multiplayer.get_unique_id()].hat = $"../..".winning_hat
 		GameManager.Players[multiplayer.get_unique_id()].playerObject.winner()
 		GameManager.Players[multiplayer.get_unique_id()].wasWinner = true
@@ -38,12 +42,14 @@ func _on_restart_timer_timeout() -> void:
 
 @rpc("authority", "call_local", "reliable")
 func cleanup_data():
+	$"../Victory Particles".emitting = false
+	$"../Losing Particles".emitting = false
 	GameManager.CPUS.clear()
 	GameManager.TeamA.clear()
 	GameManager.TeamB.clear()
 	GameManager.cleanUpShells()
 	for powerup in GameManager.Powerups:
-		if powerup.spawnedSpot.hasItem:
+		if is_instance_valid(powerup) and is_instance_valid(powerup.spawnedSpot):
 			powerup.spawnedSpot.hasItem = false
 			powerup.queue_free()
 	GameManager.Powerups.clear()
