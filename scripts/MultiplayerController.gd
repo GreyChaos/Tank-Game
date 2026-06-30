@@ -28,6 +28,10 @@ func _ready() -> void:
 
 
 func _physics_process(_delta: float) -> void:
+	if !GameManager.game_in_progress:
+		# Have tank face mouse
+		$MainMenu/CustomizeScreen/Tank1.look_at(get_global_mouse_position())
+		$MainMenu/CustomizeScreen/Tank1.rotate(deg_to_rad(90))
 	if Input.is_action_just_pressed("disconnect") and GameManager.game_in_progress:
 		if multiplayer.is_server():
 			_on_cancel_button_down()

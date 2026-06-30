@@ -240,7 +240,7 @@ z_index = 2
 position = Vector2(580, 644)
 rotation = 4.712389
 emitting = false
-amount = 600
+amount = 1500
 lifetime = 3.0
 speed_scale = 0.5
 process_material = SubResource("ParticleProcessMaterial_2vcri")
@@ -257,7 +257,7 @@ z_index = 2
 position = Vector2(574, 323)
 rotation = 1.5707964
 emitting = false
-amount = 450
+amount = 600
 speed_scale = 0.5
 process_material = SubResource("ParticleProcessMaterial_wqnuq")
 
