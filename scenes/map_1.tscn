@@ -162,6 +162,22 @@ text = "YOU LOSE!"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="Broadcast" type="RichTextLabel" parent="CanvasLayer" unique_id=526261960]
+offset_left = 1.0
+offset_top = 87.0
+offset_right = 1152.0
+offset_bottom = 328.0
+theme_override_fonts/normal_font = ExtResource("4_00lji")
+theme_override_font_sizes/normal_font_size = 64
+bbcode_enabled = true
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="BroadcastTimer" type="Timer" parent="CanvasLayer" unique_id=1291556694]
+wait_time = 4.0
+one_shot = true
+
 [node name="PlayersContainer" type="Node2D" parent="." unique_id=835041128]
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="." unique_id=147476515]
@@ -244,3 +260,4 @@ polygon = PackedVector2Array(779, 239, 779, 355, 552, 355, 552, 444, 879, 444, 8
 
 [connection signal="timeout" from="RestartTimer" to="CanvasLayer/GameOver" method="_on_restart_timer_timeout"]
 [connection signal="timeout" from="Powerups/PowerupSpawnTimer" to="Powerups" method="_on_powerup_spawn_timer_timeout"]
+[connection signal="timeout" from="CanvasLayer/BroadcastTimer" to="." method="_on_broadcast_timer_timeout"]

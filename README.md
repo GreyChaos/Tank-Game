@@ -1,7 +1,8 @@
-# Tank Game (v0.10) - Networking Part 2!
+# Tank Game (v0.12.3) - CTF Indicators!
 
 A multiplayer, top-down tank battle game built in the Godot engine. Drive around chaotic arenas, shoot your friends (or CPUs), grab powerups, and survive hazards like cracking ice and raining nukes. Last tank standing wins!
 
+![Menu](screenshots/main_menu.png)
 
 ##  Features
 
@@ -11,15 +12,19 @@ A multiplayer, top-down tank battle game built in the Godot engine. Drive around
 * **Two Game Modes:**
     * **Free-For-All (FFA):** Last tank standing wins.
     * **Capture the Flag (CTF):** Steal the enemy flag and bring it back to your base.
-* **Game-Changing Powerups:**
+* **Game Changing Powerups:**
     * *Health Boost*
     * *Nuke:* Rains 25 explosions across the map.
     * *Big Shot:* A massive, penetrating shell.
     * *Triple Shot / 360° Shot:* Devastating multi-shell spreads.
-    * Speed boost: Speed increased, but your forced to go forward
+    * *Speed boost:* Speed increased, but your forced to go forward
+	* *Reverse Speed boost:* Same as above but backwards
+	* *Shield:* Stops one shot, exluding nukes
 * **Map Hazards:** Watch out for cracking ice tiles, falling nuke strikes, a spinning sand pit that reverses your controls, and prickly cacti.
 * **Customization & Cosmetics:** Pick your name and tank color. Plus, winners get a fun hat to wear during the next match!
 * **Persistent Settings:** Player name, color, last connected server, volume, and fullscreen preferences save automatically between sessions.
+
+![Capture the flag](screenshots/capture_the_flag.png)
 
 ---
 
@@ -31,6 +36,8 @@ A multiplayer, top-down tank battle game built in the Godot engine. Drive around
 
 ---
 
+![Powerup](screenshots/powerup_in_use.png)
+
 ##  How to Play / Install
 
 1. Download the latest build from the **[Releases](https://github.com/GreyChaos/Tank-Game/releases)** page.
@@ -38,5 +45,7 @@ A multiplayer, top-down tank battle game built in the Godot engine. Drive around
 3. Choose **Host** or enter your friend's IP address to **Join**.
 
 ---
+
+![Game Over](screenshots/game_over_ice.png)
 
 > **Note on AI:** No generative AI was used for the art or final code of this game. It was utilized strictly as a tool for debugging assistance.
