@@ -64,6 +64,7 @@ func peer_disconnected(id):
 		GameManager.DeadPlayers.clear()
 		$JoinScreen/Disconnect.visible = false
 		$CountScreen.visible = false
+		$CountScreen/Timer.stop()
 	# The client disconnected
 	print("Player Disconnected " + str(id))
 	var listText = "Players"
@@ -366,6 +367,9 @@ func _on_cpu_slider_value_changed(value: float) -> void:
 
 
 func _on_cancel_button_down() -> void:
+	GameManager.game_in_progress = false
+	$CountScreen.visible = false
+	$CountScreen/Timer.stop()
 	server_shutting_down.rpc()
 	multiplayer.multiplayer_peer.close()
 	$ButtonClicked.play()

@@ -17,7 +17,7 @@ func _ready() -> void:
 	starting_flag_spot = global_position
 
 func _physics_process(delta: float) -> void:
-	if !has_flag and GameManager.current_gamemode == SceneManager.GameMode.CTF:
+	if !has_flag and GameManager.current_gamemode == SceneManager.GameMode.CTF and multiplayer.is_server():
 		$Flag.global_position = player_with_flag.global_position
 
 func _on_area_entered(area: Area2D) -> void:
