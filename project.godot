@@ -14,6 +14,7 @@ config/name="Tank Game"
 run/main_scene="uid://151dr6ec2sog"
 config/features=PackedStringArray("4.7", "Forward Plus")
 boot_splash/image="uid://dmprdpciv5dou"
+config/icon="uid://dvw2xm661lm4p"
 boot_splash/minimum_display_time=1000
 
 [audio]

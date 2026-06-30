@@ -9,6 +9,7 @@ enum TeamLabel{
 	B
 }
 var starting_flag_spot
+var game_over = false
 
 @export var team: TeamLabel = TeamLabel.A
 
@@ -21,7 +22,7 @@ func _physics_process(delta: float) -> void:
 		$Flag.global_position = player_with_flag.global_position
 
 func _on_area_entered(area: Area2D) -> void:
-	if !multiplayer.is_server():
+	if !multiplayer.is_server() or game_over:
 		return
 	var player = area.get_parent()
 	if player is CharacterBody2D:
@@ -48,28 +49,30 @@ func _on_area_entered(area: Area2D) -> void:
 		# Check to see if player is returning a flag
 		if GameManager.TeamA.has(player) and team == TeamLabel.A:
 			if player.flag_being_held != local_flag and player.flag_being_held != null:
+				end_game()
 				for playerb in GameManager.TeamB:
 					player.flag_being_held = null
-					GameManager.current_gamemode = SceneManager.GameMode.FFA
 					if GameManager.TeamA.size() > 1:
 						$"..".start_broadcast("Congrats [color=AQUAMARINE]Team A[/color], but\nTHERE CAN ONLY BE ONE\nFREE FOR ALL!")
 					if playerb is PlayerTank:
 						playerb.deal_damage(str(playerb.name).to_int(), 10)
 					else:
 						playerb.cpu_deal_damage(10)
-					queue_free()
 		if GameManager.TeamB.has(player) and team == TeamLabel.B:
 			if player.flag_being_held != local_flag and player.flag_being_held != null:
+				end_game()
 				for playera in GameManager.TeamA:
 					player.flag_being_held = null
-					GameManager.current_gamemode = SceneManager.GameMode.FFA
 					if GameManager.TeamB.size() > 1:
 						$"..".start_broadcast("Congrats [color=crimson]Team B[/color], but\nTHERE CAN ONLY BE ONE\nFREE FOR ALL!")
 					if playera is PlayerTank:
 						playera.deal_damage(str(playera.name).to_int(), 10)
 					else:
 						playera.cpu_deal_damage(10)
-					queue_free()
+
+func end_game():
+	GameManager.change_game_mode.rpc(SceneManager.GameMode.FFA)
+	game_over = true
 
 func reset_flag(): ## Resets flag back to original spot
 	if !multiplayer.is_server():

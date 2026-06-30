@@ -14,6 +14,8 @@
 [ext_resource type="Texture2D" uid="uid://clgrjl6hqlp86" path="res://assets/sprites/Hats/map5_hat.png" id="11_5c4u7"]
 [ext_resource type="Texture2D" uid="uid://cyhvsnyjpsvnj" path="res://powerups/sprites/shield.png" id="13_xjyf6"]
 [ext_resource type="Texture2D" uid="uid://diohov7whtx2" path="res://assets/sprites/TankRubble.png" id="14_5c4u7"]
+[ext_resource type="Texture2D" uid="uid://dd8swbn3mcdou" path="res://assets/sprites/blueFlagIndicator.png" id="15_ol38e"]
+[ext_resource type="Texture2D" uid="uid://8hyb7gis0id1" path="res://assets/sprites/redFlagIndicator.png" id="16_jovud"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_v3n02"]
 animations = [{
@@ -425,6 +427,20 @@ process_material = SubResource("ParticleProcessMaterial_3naq7")
 visible = false
 z_index = 1
 texture = ExtResource("14_5c4u7")
+
+[node name="BlueFlagIndicator" type="Sprite2D" parent="." unique_id=1754065765]
+visible = false
+z_index = 3
+position = Vector2(0, 4)
+scale = Vector2(3.0088048, 3.0088048)
+texture = ExtResource("15_ol38e")
+
+[node name="RedFlagIndicator" type="Sprite2D" parent="." unique_id=175084159]
+visible = false
+z_index = 3
+position = Vector2(0, 4)
+scale = Vector2(3.0088048, 3.0088048)
+texture = ExtResource("16_jovud")
 
 [connection signal="timeout" from="DamageCooldown" to="." method="_on_damage_cooldown_timeout"]
 [connection signal="timeout" from="RespawnTimer" to="." method="restart"]

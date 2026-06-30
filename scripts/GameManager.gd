@@ -21,8 +21,10 @@ func playerDied(playerID: int) -> void:
 	DeadPlayers.append(playerID)
 	if (DeadPlayers.size() == Players.size() - 1):
 			gameOver.emit()
-
 	
-		
 func cleanUpShells() -> void:
 	cleanShells.emit()
+	
+@rpc("authority","call_local","reliable")
+func change_game_mode(new_gamemode: SceneManager.GameMode):
+	current_gamemode = new_gamemode

@@ -44,6 +44,10 @@ func _ready() -> void:
 		else:
 			camera.enabled = false
 	name_color = $Name.modulate
+	# Enable flag indicators
+	if GameManager.current_gamemode == SceneManager.GameMode.CTF and multiplayer.get_unique_id() == name.to_int():
+		$BlueFlagIndicator.visible = true
+		$RedFlagIndicator.visible = true
 	
 	
 func _on_synchronized():
@@ -55,7 +59,12 @@ func _on_synchronized():
 	else:
 		camera.queue_free()
 
+
 func _physics_process(delta: float) -> void:
+	# Update rotation of Flag Indicators
+	if GameManager.current_gamemode == SceneManager.GameMode.CTF:
+		$BlueFlagIndicator.look_at(get_parent().get_parent().get_team_flag(FlagSpot.TeamLabel.A).local_flag.global_position)
+		$RedFlagIndicator.look_at(get_parent().get_parent().get_team_flag(FlagSpot.TeamLabel.B).local_flag.global_position)
 	if $MultiplayerSynchronizer.get_multiplayer_authority() == multiplayer.get_unique_id():
 		#Debug L for Lud Speed
 		if Input.is_action_just_pressed("speed_boost") and multiplayer.is_server():
@@ -239,6 +248,8 @@ func restart():
 	$Hearts.frame = 0
 	currentScale = 1
 	global_scale = Vector2(currentScale, currentScale)
+	$BlueFlagIndicator.visible = false
+	$RedFlagIndicator.visible = false
 
 
 func _on_damage_cooldown_timeout() -> void:
