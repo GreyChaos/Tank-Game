@@ -5,6 +5,7 @@ var peer
 var currentScene
 signal server_data_received(data)
 
+
 @export var port = 8910
 
 var mapChoice = GameManager.MAPS[0]
@@ -17,28 +18,34 @@ func _ready() -> void:
 	multiplayer.connected_to_server.connect(connected_to_server)
 	multiplayer.connection_failed.connect(connection_failed)
 	GameManager.switchMaps.connect(switchMaps)
+	GameManager.fade_to_black.connect(fade_to_black)
 	load_player_settings()
+	
+	# Assign buttons to animations
+	for button in get_tree().get_nodes_in_group("ui_buttons"):
+		button.mouse_entered.connect(on_button_hover.bind(button))
+		button.mouse_exited.connect(off_button_hover.bind(button))
 
 
 func _physics_process(_delta: float) -> void:
 	if Input.is_action_just_pressed("disconnect") and GameManager.game_in_progress:
 		if multiplayer.is_server():
 			_on_cancel_button_down()
-			$MapContainer.get_child(0).queue_free()
-			self.show()
-			$Music.play()
-			$CountScreen.visible = false
+			$MainMenu/MapContainer.get_child(0).queue_free()
+			$MainMenu.visible = true
+			$MainMenu/Music.play()
+			$MainMenu/CountScreen.visible = false
 			GameManager.Players.clear()
 			GameManager.DeadPlayers.clear()
 			GameManager.game_in_progress = false
 		else:
 			disconnect_client.rpc()
-			$JoinScreen/Disconnect.visible = false
+			$MainMenu/JoinScreen/Disconnect.visible = false
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
-	$CountScreen/Countdown.text = "Starting in: " + "%0.1f" % $CountScreen/Timer.time_left
+	$MainMenu/CountScreen/Countdown.text = "Starting in: " + "%0.1f" % $MainMenu/CountScreen/Timer.time_left
 
 
 # Server And Client
@@ -51,20 +58,20 @@ func peer_disconnected(id):
 	# The host disconnected or player asked to be kicked
 	if id == 1:
 		if GameManager.game_in_progress:
-			self.show()
-			$Music.play()
+			$MainMenu.visible = true
+			$MainMenu/Music.play()
 			GameManager.game_in_progress = false
 		multiplayer.multiplayer_peer = null
-		$JoinScreen/JoinError.text = "Disconnected"
-		$"Player List".visible = false
-		$JoinScreen/Server.editable = true
-		$JoinScreen/Join.visible = true
-		$JoinScreen/Back.visible = true
+		$MainMenu/JoinScreen/JoinError.text = "Disconnected"
+		$MainMenu/"Player List".visible = false
+		$MainMenu/JoinScreen/Server.editable = true
+		$MainMenu/JoinScreen/Join.visible = true
+		$MainMenu/JoinScreen/Back.visible = true
 		GameManager.Players.clear()
 		GameManager.DeadPlayers.clear()
-		$JoinScreen/Disconnect.visible = false
-		$CountScreen.visible = false
-		$CountScreen/Timer.stop()
+		$MainMenu/JoinScreen/Disconnect.visible = false
+		$MainMenu/CountScreen.visible = false
+		$MainMenu/CountScreen/Timer.stop()
 	# The client disconnected
 	print("Player Disconnected " + str(id))
 	var listText = "Players"
@@ -72,13 +79,13 @@ func peer_disconnected(id):
 		if GameManager.Players.has(id):
 			if GameManager.Players[id].playerObject != null:
 				GameManager.Players[id].playerObject.queue_free()
-		$"HostScreen/CPU Slider".tick_count = 8 - GameManager.Players.size()
-		$"HostScreen/CPU Slider".max_value = 8 - GameManager.Players.size()
+		$MainMenu/"HostScreen/CPU Slider".tick_count = 8 - GameManager.Players.size()
+		$MainMenu/"HostScreen/CPU Slider".max_value = 8 - GameManager.Players.size()
 	if id in GameManager.Players:
 		GameManager.Players.erase(id)
 	for player in GameManager.Players:
 		listText += ("\n" + GameManager.Players[player].name)
-	$"Player List".text = listText
+	$MainMenu/"Player List".text = listText
 
 # Client
 func connected_to_server():
@@ -86,16 +93,16 @@ func connected_to_server():
 	request_data.rpc_id(1, 1)
 	var is_game_started = await server_data_received
 	if !is_game_started:
-		SendPlayerInfo.rpc_id(1, $CustomizeScreen/CustomizeMenu/Name.text, multiplayer.get_unique_id(), $CustomizeScreen/CustomizeMenu/Tank1.modulate)
-		$JoinScreen/JoinError.text = "Connected"
-		$JoinScreen/Disconnect.visible = true
+		SendPlayerInfo.rpc_id(1, $MainMenu/CustomizeScreen/Name.text, multiplayer.get_unique_id(), $MainMenu/CustomizeScreen/Tank1.modulate)
+		$MainMenu/JoinScreen/JoinError.text = "Connected"
+		$MainMenu/JoinScreen/Disconnect.visible = true
 	else:
 		multiplayer.multiplayer_peer = null
-		$JoinScreen/JoinError.text = "Game Already Started"
-		$"Player List".visible = false
-		$JoinScreen/Server.editable = true
-		$JoinScreen/Join.visible = true
-		$JoinScreen/Back.visible = true
+		$MainMenu/JoinScreen/JoinError.text = "Game Already Started"
+		$MainMenu/"Player List".visible = false
+		$MainMenu/JoinScreen/Server.editable = true
+		$MainMenu/JoinScreen/Join.visible = true
+		$MainMenu/JoinScreen/Back.visible = true
 
 
 @rpc("any_peer")
@@ -116,11 +123,11 @@ func recieve_data_from_server(data):
 # Client
 func connection_failed():
 	multiplayer.multiplayer_peer = null
-	$JoinScreen/JoinError.text = "Connection Failed"
-	$"Player List".visible = false
-	$JoinScreen/Server.editable = true
-	$JoinScreen/Join.visible = true
-	$JoinScreen/Back.visible = true
+	$MainMenu/JoinScreen/JoinError.text = "Connection Failed"
+	$MainMenu/"Player List".visible = false
+	$MainMenu/JoinScreen/Server.editable = true
+	$MainMenu/JoinScreen/Join.visible = true
+	$MainMenu/JoinScreen/Back.visible = true
 
 
 @rpc("any_peer", "reliable")
@@ -136,22 +143,25 @@ func SendPlayerInfo(player_name, id, custom_color: Color):
 	var listText = "Players"
 	for player in GameManager.Players:
 		listText += ("\n" + GameManager.Players[player].name)
-	$"Player List".text = listText
+	$MainMenu/"Player List".text = listText
 
 	if multiplayer.is_server():
 		for i in GameManager.Players:
 			SendPlayerInfo.rpc(GameManager.Players[i].name, i, GameManager.Players[i].color)
-	$"HostScreen/CPU Slider".tick_count = 8 - GameManager.Players.size()
-	$"HostScreen/CPU Slider".max_value = 8 - GameManager.Players.size()
+	$MainMenu/"HostScreen/CPU Slider".tick_count = 8 - GameManager.Players.size()
+	$MainMenu/"HostScreen/CPU Slider".max_value = 8 - GameManager.Players.size()
 
 
 @rpc("any_peer", "call_local", "reliable")
 func StartGame(mapPath: String):
-	$MapSpawner.spawn_path = "../MapContainer"
+	var fade_to_black_tween = create_tween()
+	fade_to_black_tween.tween_property($FadeToBlack, "modulate:a", 1.0, 2)
+	fade_to_black_tween.tween_property($FadeToBlack, "modulate:a", 0.0, 3)
+	$MainMenu/MapSpawner.spawn_path = "../MapContainer"
 	if currentScene != null:
 		currentScene.queue_free()
-	$CountScreen/Timer.start()
-	$CountScreen.visible = true
+	$MainMenu/CountScreen/Timer.start()
+	$MainMenu/CountScreen.visible = true
 	GameManager.current_map = mapPath
 	mapChoice = mapPath
 	GameManager.game_in_progress = true
@@ -172,40 +182,40 @@ func ContinueGame(mapPath: String):
 @rpc("authority", "reliable")
 func server_shutting_down():
 	multiplayer.multiplayer_peer = null
-	$JoinScreen/JoinError.text = "Server Shutdown"
-	$"Player List".visible = false
-	$JoinScreen/Server.editable = true
-	$JoinScreen/Join.visible = true
-	$JoinScreen/Back.visible = true
-	$JoinScreen/Disconnect.visible = false
+	$MainMenu/JoinScreen/JoinError.text = "Server Shutdown"
+	$MainMenu/"Player List".visible = false
+	$MainMenu/JoinScreen/Server.editable = true
+	$MainMenu/JoinScreen/Join.visible = true
+	$MainMenu/JoinScreen/Back.visible = true
+	$MainMenu/JoinScreen/Disconnect.visible = false
 	GameManager.Players.clear()
 	GameManager.DeadPlayers.clear()
-	self.show()
-	$Music.play()
-	$CountScreen.visible = false
+	$MainMenu.visible = true
+	$MainMenu/Music.play()
+	$MainMenu/CountScreen.visible = false
 
 
 func _on_start_button_down() -> void:
-	$ButtonClicked.play()
+	$MainMenu/ButtonClicked.play()
 	StartGame.rpc(mapChoice)
 
 
 func _on_join_button_down() -> void:
-	$ButtonClicked.play()
+	$MainMenu/ButtonClicked.play()
 	peer = ENetMultiplayerPeer.new()
-	peer.create_client($JoinScreen/Server.text, port)
+	peer.create_client($MainMenu/JoinScreen/Server.text, port)
 	peer.get_peer(1).set_timeout(0, 0, 5000)
 	peer.get_host().compress(ENetConnection.COMPRESS_RANGE_CODER)
 	multiplayer.set_multiplayer_peer(peer)
 	save_player_settings()
-	$JoinScreen/JoinError.text = ""
-	$"Player List".visible = true
-	$JoinScreen/Server.editable = false
-	$JoinScreen/Join.visible = false
-	$JoinScreen/Back.visible = false
+	$MainMenu/JoinScreen/JoinError.text = ""
+	$MainMenu/"Player List".visible = true
+	$MainMenu/JoinScreen/Server.editable = false
+	$MainMenu/JoinScreen/Join.visible = false
+	$MainMenu/JoinScreen/Back.visible = false
 
 func _on_host_button_down() -> void:
-	$ButtonClicked.play()
+	$MainMenu/ButtonClicked.play()
 	peer = ENetMultiplayerPeer.new()
 
 	var error = peer.create_server(port, 8)
@@ -216,57 +226,57 @@ func _on_host_button_down() -> void:
 	peer.get_host().compress(ENetConnection.COMPRESS_RANGE_CODER)
 	multiplayer.set_multiplayer_peer(peer)
 
-	SendPlayerInfo($CustomizeScreen/CustomizeMenu/Name.text, multiplayer.get_unique_id(), $CustomizeScreen/CustomizeMenu/Tank1.modulate)
+	SendPlayerInfo($MainMenu/CustomizeScreen/Name.text, multiplayer.get_unique_id(), $MainMenu/CustomizeScreen/Tank1.modulate)
 
-	$"Player List".visible = true
-	$HostScreen/Start.visible = true
-	$HostScreen/Host.visible = false
-	$HostScreen/Back.visible = false
-	$HostScreen/Cancel.visible = true
+	$MainMenu/"Player List".visible = true
+	$MainMenu/HostScreen/Start.visible = true
+	$MainMenu/HostScreen/Host.visible = false
+	$MainMenu/HostScreen/Back.visible = false
+	$MainMenu/HostScreen/Cancel.visible = true
 
 func _on_join_menu_button_down() -> void:
-	$ButtonClicked.play()
-	$StartScreen.visible = false
-	$JoinScreen.visible = true
+	$MainMenu/ButtonClicked.play()
+	$MainMenu/StartScreen.visible = false
+	$MainMenu/JoinScreen.visible = true
 
 
 func _on_host_menu_button_down() -> void:
-	$ButtonClicked.play()
-	$StartScreen.visible = false
-	$HostScreen.visible = true
+	$MainMenu/ButtonClicked.play()
+	$MainMenu/StartScreen.visible = false
+	$MainMenu/HostScreen.visible = true
 
 
 func _on_map_1_button_down() -> void:
-	$ButtonClicked.play()
+	$MainMenu/ButtonClicked.play()
 	mapChoice = GameManager.MAPS[0]
-	$HostScreen/MapSelected.global_position = $HostScreen/Map1.global_position
+	$MainMenu/HostScreen/MapSelected.global_position = $MainMenu/HostScreen/Map1.global_position
 
 func _on_map_2_button_down() -> void:
-	$ButtonClicked.play()
+	$MainMenu/ButtonClicked.play()
 	mapChoice = GameManager.MAPS[1]
-	$HostScreen/MapSelected.global_position = $HostScreen/Map2.global_position
+	$MainMenu/HostScreen/MapSelected.global_position = $MainMenu/HostScreen/Map2.global_position
 	
 func _on_map_3_button_down() -> void:
-	$ButtonClicked.play()
+	$MainMenu/ButtonClicked.play()
 	mapChoice = GameManager.MAPS[2]
-	$HostScreen/MapSelected.global_position = $HostScreen/Map3.global_position
+	$MainMenu/HostScreen/MapSelected.global_position = $MainMenu/HostScreen/Map3.global_position
 
 func _on_map_4_button_down() -> void:
-	$ButtonClicked.play()
+	$MainMenu/ButtonClicked.play()
 	mapChoice = GameManager.MAPS[3]
-	$HostScreen/MapSelected.global_position = $HostScreen/Map4.global_position
+	$MainMenu/HostScreen/MapSelected.global_position = $MainMenu/HostScreen/Map4.global_position
 	
 	
 func _on_map_5_button_down() -> void:
-	$ButtonClicked.play()
+	$MainMenu/ButtonClicked.play()
 	mapChoice = GameManager.MAPS[4]
-	$HostScreen/MapSelected.global_position = $HostScreen/Map5.global_position
+	$MainMenu/HostScreen/MapSelected.global_position = $MainMenu/HostScreen/Map5.global_position
 
 	
 func _on_settings_button_down() -> void:
-	$ButtonClicked.play()
-	$StartScreen.visible = false
-	$SettingsScreen.visible = true
+	$MainMenu/ButtonClicked.play()
+	$MainMenu/StartScreen.visible = false
+	$MainMenu/SettingsScreen.visible = true
 
 
 func _on_exit_button_down() -> void:
@@ -276,42 +286,46 @@ func _on_exit_button_down() -> void:
 func _on_name_text_changed(new_text: String) -> void:
 	save_player_settings()
 	if multiplayer.is_server():
-		SendPlayerInfo(new_text, multiplayer.get_unique_id(), $CustomizeScreen/CustomizeMenu/Tank1.modulate)
+		SendPlayerInfo(new_text, multiplayer.get_unique_id(), $MainMenu/CustomizeScreen/Tank1.modulate)
 	else:
-		SendPlayerInfo.rpc_id(1, new_text, multiplayer.get_unique_id(), $CustomizeScreen/CustomizeMenu/Tank1.modulate)
+		SendPlayerInfo.rpc_id(1, new_text, multiplayer.get_unique_id(), $MainMenu/CustomizeScreen/Tank1.modulate)
 
 
 func _on_start_timer_timeout() -> void:
-	$Music.stop()
-	self.hide()
+	$MainMenu/Music.stop()
+	$MainMenu.visible = false
 	if multiplayer.is_server():
 		currentScene = load(mapChoice).instantiate()
 		currentScene.name = mapChoice.get_file().get_basename()
-		$MapContainer.add_child(currentScene)
+		$MainMenu/MapContainer.add_child(currentScene)
 	
 func switchMaps(mapPath: String) -> void:
 	ContinueGame.rpc(mapPath)
 
 
 func _on_customize_menu_button_down() -> void:
-	$ButtonClicked.play()
-	$CustomizeScreen/CustomizeMenu/ColorPicker.visible = !$CustomizeScreen/CustomizeMenu/ColorPicker.is_visible_in_tree()
+	$MainMenu/ButtonClicked.play()
+	$MainMenu/CustomizeScreen/ColorPicker.visible = !$MainMenu/CustomizeScreen/ColorPicker.is_visible_in_tree()
+	if $MainMenu/CustomizeScreen/ColorPicker.visible:
+		$MainMenu/CustomizeScreen/CustomizeMenu.text = "Confirm"
+	else:
+		$MainMenu/CustomizeScreen/CustomizeMenu.text = "Change Color"
 
 func _on_color_picker_color_changed(color: Color) -> void:
 	save_player_settings()
 	if multiplayer.is_server():
-		SendPlayerInfo($CustomizeScreen/CustomizeMenu/Name.text, multiplayer.get_unique_id(), color)
+		SendPlayerInfo($MainMenu/CustomizeScreen/Name.text, multiplayer.get_unique_id(), color)
 	else:
-		SendPlayerInfo.rpc_id(1, $CustomizeScreen/CustomizeMenu/Name.text, multiplayer.get_unique_id(), color)
-	$CustomizeScreen/CustomizeMenu/Tank1.modulate = color
+		SendPlayerInfo.rpc_id(1, $MainMenu/CustomizeScreen/Name.text, multiplayer.get_unique_id(), color)
+	$MainMenu/CustomizeScreen/Tank1.modulate = color
 	
 func save_player_settings():
 	var config = ConfigFile.new()
 	# Values Saved
-	config.set_value("player", "name", $CustomizeScreen/CustomizeMenu/Name.text)
-	config.set_value("player", "color", $CustomizeScreen/CustomizeMenu/Tank1.modulate.to_html())
-	config.set_value("server", "last connected", $JoinScreen/Server.text)
-	config.set_value("setting", "audio master", $"SettingsScreen/MasterVolume/Master Volume".value)
+	config.set_value("player", "name", $MainMenu/CustomizeScreen/Name.text)
+	config.set_value("player", "color", $MainMenu/CustomizeScreen/Tank1.modulate.to_html())
+	config.set_value("server", "last connected", $MainMenu/JoinScreen/Server.text)
+	config.set_value("setting", "audio master", $MainMenu/"SettingsScreen/MasterVolume/Master Volume".value)
 	config.set_value("setting", "fullscreen", DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN)
 
 	config.save("user://settings.cfg")
@@ -322,16 +336,16 @@ func load_player_settings():
 	if err == OK:
 		# Load name
 		var saved_name = config.get_value("player", "name", "Default Name")
-		$CustomizeScreen/CustomizeMenu/Name.text = saved_name
+		$MainMenu/CustomizeScreen/Name.text = saved_name
 		# Load color
 		var saved_color_hex = config.get_value("player", "color", "#ffffff")
-		$CustomizeScreen/CustomizeMenu/Tank1.modulate = Color.html(saved_color_hex)
+		$MainMenu/CustomizeScreen/Tank1.modulate = Color.html(saved_color_hex)
 		# Load last IP
 		var last_ip =  config.get_value("server", "last connected", "127.0.0.1")
-		$JoinScreen/Server.text = last_ip
+		$MainMenu/JoinScreen/Server.text = last_ip
 		# Load Volume
 		var saved_master_volume =  config.get_value("setting", "audio master", "0")
-		$"SettingsScreen/MasterVolume/Master Volume".value = float(saved_master_volume)
+		$MainMenu/"SettingsScreen/MasterVolume/Master Volume".value = float(saved_master_volume)
 		# Load Fullscreen
 		var saved_fullscreen =  config.get_value("setting", "fullscreen", false)
 		if saved_fullscreen:
@@ -339,12 +353,13 @@ func load_player_settings():
 			DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_BORDERLESS, true)
 
 func _on_back_button_down() -> void:
-	$ButtonClicked.play()
-	$StartScreen.visible = true
-	$JoinScreen.visible = false
-	$HostScreen.visible = false
-	$SettingsScreen.visible = false
-	$JoinScreen/JoinError.text = ""
+	$MainMenu/ButtonClicked.play()
+	$MainMenu/StartScreen.visible = true
+	$MainMenu/JoinScreen.visible = false
+	$MainMenu/HostScreen.visible = false
+	$MainMenu/SettingsScreen.visible = false
+	$MainMenu/JoinScreen/JoinError.text = ""
+	
 
 
 func _on_h_slider_value_changed(value: float) -> void:
@@ -368,27 +383,39 @@ func _on_cpu_slider_value_changed(value: float) -> void:
 
 func _on_cancel_button_down() -> void:
 	GameManager.game_in_progress = false
-	$CountScreen.visible = false
-	$CountScreen/Timer.stop()
+	$MainMenu/CountScreen.visible = false
+	$MainMenu/CountScreen/Timer.stop()
 	server_shutting_down.rpc()
 	multiplayer.multiplayer_peer.close()
-	$ButtonClicked.play()
+	$MainMenu/ButtonClicked.play()
 	multiplayer.multiplayer_peer = null
-	$HostScreen/Cancel.visible = false
-	$HostScreen/Back.visible = true
-	$HostScreen/Start.visible = false
-	$HostScreen/Host.visible = true
+	$MainMenu/HostScreen/Cancel.visible = false
+	$MainMenu/HostScreen/Back.visible = true
+	$MainMenu/HostScreen/Start.visible = false 
+	$MainMenu/HostScreen/Host.visible = true
 	GameManager.Players.clear()
 	GameManager.DeadPlayers.clear()
-	$"Player List".visible = false
+	$MainMenu/"Player List".visible = false
 
 
 func _on_disconnect_button_down() -> void:
-	$ButtonClicked.play()
+	$MainMenu/ButtonClicked.play()
 	disconnect_client.rpc()
-	$JoinScreen/Disconnect.visible = false
+	$MainMenu/JoinScreen/Disconnect.visible = false
 
 @rpc("any_peer", "reliable")
 func disconnect_client():
 	if multiplayer.is_server():
 		multiplayer.multiplayer_peer.disconnect_peer(multiplayer.get_remote_sender_id())
+		
+func on_button_hover(button: Button):
+	button.scale = button.scale * 1.05
+	
+func off_button_hover(button: Button):
+	button.scale = button.scale / 1.05
+	
+func fade_to_black():
+	var fade_to_black_tween = create_tween()
+	fade_to_black_tween.tween_property($FadeToBlack, "modulate:a", 1.0, 5)
+	fade_to_black_tween.tween_property($FadeToBlack, "modulate:a", 0.0, 3)
+	pass

@@ -10,6 +10,7 @@ func _process(_delta: float) -> void:
 	$"../RestartText".text = "Restarting in: " + "%0.1f" % $"../../RestartTimer".time_left
 
 func gameOver() -> void:
+	GameManager.fade_to_black.emit()
 	visible = true
 	$"../RestartText".visible = true
 	$"../../RestartTimer".start()

@@ -8,6 +8,7 @@ var dead_cpus = []
 signal gameOver
 signal cleanShells
 signal switchMaps(mapString: String)
+signal fade_to_black
 var Powerups = []
 var TeamA = []
 var TeamB = []

@@ -49,30 +49,29 @@ func _on_area_entered(area: Area2D) -> void:
 		# Check to see if player is returning a flag
 		if GameManager.TeamA.has(player) and team == TeamLabel.A:
 			if player.flag_being_held != local_flag and player.flag_being_held != null:
-				end_game()
+				GameManager.change_game_mode.rpc(SceneManager.GameMode.FFA)
+				GameManager.DeadPlayers.clear()
 				for playerb in GameManager.TeamB:
-					player.flag_being_held = null
-					if GameManager.TeamA.size() > 1:
-						$"..".start_broadcast("Congrats [color=AQUAMARINE]Team A[/color], but\nTHERE CAN ONLY BE ONE\nFREE FOR ALL!")
-					if playerb is PlayerTank:
-						playerb.deal_damage(str(playerb.name).to_int(), 10)
-					else:
-						playerb.cpu_deal_damage(10)
+					if not playerb.has_method("cpu_deal_damage"):
+						playerb.deal_damage.rpc(str(playerb.name).to_int(), 10)
+					end_game()
 		if GameManager.TeamB.has(player) and team == TeamLabel.B:
 			if player.flag_being_held != local_flag and player.flag_being_held != null:
-				end_game()
+				GameManager.change_game_mode.rpc(SceneManager.GameMode.FFA)
+				GameManager.DeadPlayers.clear()
 				for playera in GameManager.TeamA:
-					player.flag_being_held = null
-					if GameManager.TeamB.size() > 1:
-						$"..".start_broadcast("Congrats [color=crimson]Team B[/color], but\nTHERE CAN ONLY BE ONE\nFREE FOR ALL!")
-					if playera is PlayerTank:
-						playera.deal_damage(str(playera.name).to_int(), 10)
-					else:
-						playera.cpu_deal_damage(10)
+					if not playera.has_method("cpu_deal_damage"):
+						playera.deal_damage.rpc(str(playera.name).to_int(), 10)
+					end_game()
 
 func end_game():
-	GameManager.change_game_mode.rpc(SceneManager.GameMode.FFA)
 	game_over = true
+	end_game_for_all.rpc()
+	
+@rpc("authority","call_local","reliable")
+func end_game_for_all():
+	GameManager.gameOver.emit()
+	
 
 func reset_flag(): ## Resets flag back to original spot
 	if !multiplayer.is_server():
