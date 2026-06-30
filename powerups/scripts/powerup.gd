@@ -1,9 +1,11 @@
 extends Node2D
 
 @export var data: PowerupData
+@export var decor = false
 var spawnedSpot
 var playerAffected
 var pickedUp = false
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -15,7 +17,7 @@ func _ready() -> void:
 
 # Pickup Logic
 func _on_area_2d_body_entered(body: Node2D) -> void:
-	if not pickedUp:
+	if not pickedUp and !decor:
 		if body is CharacterBody2D:
 			var hitPlayerID = str(body.name).to_int()
 			if GameManager.Players.has(hitPlayerID):

@@ -6,7 +6,8 @@
 [resource]
 script = ExtResource("1_jjv4u")
 name = "Speed Boost"
-move_speed = 150.0
+length = 2.0
+move_speed = 300.0
 texture = ExtResource("2_jjv4u")
 rotate_speed = 0.25
 forced_direction = 0

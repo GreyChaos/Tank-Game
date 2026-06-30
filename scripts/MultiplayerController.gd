@@ -26,8 +26,10 @@ func _physics_process(_delta: float) -> void:
 			_on_cancel_button_down()
 			$MapContainer.get_child(0).queue_free()
 			self.show()
+			$Music.play()
 			$CountScreen.visible = false
 			GameManager.Players.clear()
+			GameManager.DeadPlayers.clear()
 			GameManager.game_in_progress = false
 		else:
 			disconnect_client.rpc()
@@ -50,6 +52,7 @@ func peer_disconnected(id):
 	if id == 1:
 		if GameManager.game_in_progress:
 			self.show()
+			$Music.play()
 			GameManager.game_in_progress = false
 		multiplayer.multiplayer_peer = null
 		$JoinScreen/JoinError.text = "Disconnected"
@@ -58,6 +61,7 @@ func peer_disconnected(id):
 		$JoinScreen/Join.visible = true
 		$JoinScreen/Back.visible = true
 		GameManager.Players.clear()
+		GameManager.DeadPlayers.clear()
 		$JoinScreen/Disconnect.visible = false
 		$CountScreen.visible = false
 	# The client disconnected
@@ -174,7 +178,9 @@ func server_shutting_down():
 	$JoinScreen/Back.visible = true
 	$JoinScreen/Disconnect.visible = false
 	GameManager.Players.clear()
+	GameManager.DeadPlayers.clear()
 	self.show()
+	$Music.play()
 	$CountScreen.visible = false
 
 
@@ -369,6 +375,7 @@ func _on_cancel_button_down() -> void:
 	$HostScreen/Start.visible = false
 	$HostScreen/Host.visible = true
 	GameManager.Players.clear()
+	GameManager.DeadPlayers.clear()
 	$"Player List".visible = false
 
 
