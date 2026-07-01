@@ -11,6 +11,7 @@ func _process(_delta: float) -> void:
 
 func gameOver() -> void:
 	GameManager.fade_to_black.emit()
+	$"../.."._on_broadcast_timer_timeout()
 	visible = true
 	$"../RestartText".visible = true
 	$"../../RestartTimer".start()

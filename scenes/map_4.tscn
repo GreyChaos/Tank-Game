@@ -444,6 +444,17 @@ visible = false
 position = Vector2(-210, 38)
 script = ExtResource("14_6p068")
 
+[node name="HillSpawnPoints" type="Node2D" parent="KOTH" unique_id=484545149]
+
+[node name="SpawnPoint" type="Node2D" parent="KOTH/HillSpawnPoints" unique_id=1220995040]
+position = Vector2(210, -38)
+
+[node name="SpawnPoint2" type="Node2D" parent="KOTH/HillSpawnPoints" unique_id=2005426545]
+position = Vector2(-390, -249)
+
+[node name="SpawnPoint3" type="Node2D" parent="KOTH/HillSpawnPoints" unique_id=1370165391]
+position = Vector2(704, 468)
+
 [node name="Hill" type="Area2D" parent="KOTH" unique_id=2133714551]
 position = Vector2(210, -38)
 collision_layer = 32768
