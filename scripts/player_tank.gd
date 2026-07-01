@@ -204,17 +204,18 @@ func deal_damage(hitPlayerID: int, damageAmount: int):
 	$hitSound.play()
 	if currentHealth <= 0:
 		$DeathExplosion.emitting = true
+		# CTF Death Logic
 		if GameManager.current_gamemode == SceneManager.GameMode.CTF:
 			if flag_being_held != null:
 				get_parent().get_parent().drop_flag(flag_being_held, global_position)
 				flag_being_held = null
-			visible = false
-			set_physics_process(false)
-			$CollisionShape2D.set_deferred("disabled", true)
-			$RespawnTimer.start()
-			position = spawn_cords
+			respawn()
 			return
-		
+		# KOTH Death Logic
+		if GameManager.current_gamemode == SceneManager.GameMode.KOTH:
+			respawn()
+			return
+		# FFA Death Logic
 		GameManager.playerDied(GameManager.Players[hitPlayerID].id)
 		_on_damage_cooldown_timeout()
 		rotation = 0
@@ -237,6 +238,13 @@ func winner():
 	
 func loser():
 	$Hat.visible = false
+	
+func respawn():
+	visible = false
+	set_physics_process(false)
+	$CollisionShape2D.set_deferred("disabled", true)
+	$RespawnTimer.start()
+	position = spawn_cords
 		
 func restart():
 	reset_base_stats()

@@ -112,6 +112,7 @@ agent_radius = 35.0
 script = ExtResource("1_eg1we")
 PlayerScene = ExtResource("2_2gudk")
 winning_hat = 4
+valid_gamemodes = Array[int]([0])
 
 [node name="Music" type="AudioStreamPlayer2D" parent="." unique_id=926859462]
 stream = SubResource("AudioStreamMP3_x481q")

@@ -193,6 +193,9 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_n3826"]
 size = Vector2(50, 48)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_08vx1"]
+size = Vector2(48, 48)
+
 [sub_resource type="Gradient" id="Gradient_utbjn"]
 offsets = PackedFloat32Array(0.44585988, 1)
 colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
@@ -388,6 +391,14 @@ collision_mask = 16384
 [node name="CollisionShape2D" type="CollisionShape2D" parent="FlagDectection" unique_id=701661184]
 position = Vector2(0, 8)
 shape = SubResource("RectangleShape2D_n3826")
+
+[node name="HillDectection" type="Area2D" parent="." unique_id=1170577772]
+collision_layer = 32768
+collision_mask = 32768
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HillDectection" unique_id=84885452]
+position = Vector2(0, 8)
+shape = SubResource("RectangleShape2D_08vx1")
 
 [node name="PowerupPartical" type="GPUParticles2D" parent="." unique_id=2130192288]
 emitting = false

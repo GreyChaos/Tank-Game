@@ -7,15 +7,18 @@ var CPUScene = load("res://scenes/cpu.tscn")
 @export var winning_hat = 0
 enum GameMode{
 	FFA,
-	CTF
+	CTF,
+	KOTH
 }
-@export var gamemode: GameMode = GameMode.FFA
+@export var valid_gamemodes: Array[GameMode]
 
 func _ready() -> void:
-	GameManager.current_gamemode = gamemode
+	if multiplayer.is_server():
+		if GameManager.current_gamemode not in valid_gamemodes:
+			GameManager.change_game_mode.rpc(valid_gamemodes.pick_random())
 	$MultiplayerSpawner.spawn_function = _spawn_player
 	var spawnPoints = get_tree().get_nodes_in_group("PlayerSpawnPoint")
-	if gamemode == GameMode.FFA:
+	if GameManager.current_gamemode == GameMode.FFA:
 		spawnPoints.shuffle()
 	if multiplayer.is_server():
 		spawn_players(spawnPoints)
@@ -28,7 +31,7 @@ func spawn_players(spawnPoints : Array) -> void:
 		var team = 0
 		var pos = Vector2.ZERO
 
-		if gamemode == GameMode.CTF:
+		if GameManager.current_gamemode == GameMode.CTF:
 			if index % 2 == 0:
 				team = 2
 				pos = teamB_spawns.pop_front().global_position
@@ -49,7 +52,7 @@ func spawn_players(spawnPoints : Array) -> void:
 	var cpu_names = ["Bagelbot", "Craftulon", "Robopollo", "Botty", "Betty", "Berty", "Bloopy"]
 	cpu_names.shuffle()
 	for i in range(GameManager.CPU_count):
-		if gamemode == GameMode.CTF:
+		if GameManager.current_gamemode == GameMode.CTF:
 			var CPU = CPUScene.instantiate()
 			if i % 2 == 0:
 				GameManager.TeamA.append(CPU)

@@ -22,7 +22,7 @@ func _physics_process(delta: float) -> void:
 		$Flag.global_position = player_with_flag.global_position
 
 func _on_area_entered(area: Area2D) -> void:
-	if !multiplayer.is_server() or game_over:
+	if !multiplayer.is_server() or game_over or GameManager.current_gamemode != SceneManager.GameMode.CTF:
 		return
 	var player = area.get_parent()
 	if player is CharacterBody2D:

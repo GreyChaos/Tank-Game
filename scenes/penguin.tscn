@@ -34,7 +34,7 @@ collision_mask = 4
 position = Vector2(-0.2935444, 6.3177395)
 shape = SubResource("RectangleShape2D_b6iir")
 
-[node name="Collision" type="Area2D" parent="." unique_id=29181972]
+[node name="Collision" type="StaticBody2D" parent="." unique_id=1625669604]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Collision" unique_id=1425827595]
 position = Vector2(-0.8372549, 4.393063)

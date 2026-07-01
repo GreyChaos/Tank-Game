@@ -4,7 +4,7 @@ var Address
 var peer
 var currentScene
 signal server_data_received(data)
-
+var gamemode_selected = 0
 
 @export var port = 8910
 
@@ -201,6 +201,9 @@ func server_shutting_down():
 
 func _on_start_button_down() -> void:
 	$MainMenu/ButtonClicked.play()
+	var gamemode_values = SceneManager.GameMode.values()
+	var selected_mode: SceneManager.GameMode = gamemode_values[gamemode_selected]
+	GameManager.change_game_mode.rpc(selected_mode)
 	StartGame.rpc(mapChoice)
 
 
@@ -254,27 +257,52 @@ func _on_map_1_button_down() -> void:
 	$MainMenu/ButtonClicked.play()
 	mapChoice = GameManager.MAPS[0]
 	$MainMenu/HostScreen/MapSelected.global_position = $MainMenu/HostScreen/Map1.global_position
+	$MainMenu/HostScreen/GameModeOptions.set_item_disabled(0, false) # FFA
+	$MainMenu/HostScreen/GameModeOptions.set_item_disabled(1, true) # CTF
+	$MainMenu/HostScreen/GameModeOptions.set_item_disabled(2, false) # KOTH
+	$MainMenu/HostScreen/GameModeOptions.select(0)
+	gamemode_selected = 0
 
 func _on_map_2_button_down() -> void:
 	$MainMenu/ButtonClicked.play()
 	mapChoice = GameManager.MAPS[1]
 	$MainMenu/HostScreen/MapSelected.global_position = $MainMenu/HostScreen/Map2.global_position
+	$MainMenu/HostScreen/GameModeOptions.set_item_disabled(0, false) # FFA
+	$MainMenu/HostScreen/GameModeOptions.set_item_disabled(1, true) # CTF
+	$MainMenu/HostScreen/GameModeOptions.set_item_disabled(2, false) # KOTH
+	$MainMenu/HostScreen/GameModeOptions.select(0)
+	gamemode_selected = 0
 	
 func _on_map_3_button_down() -> void:
 	$MainMenu/ButtonClicked.play()
 	mapChoice = GameManager.MAPS[2]
 	$MainMenu/HostScreen/MapSelected.global_position = $MainMenu/HostScreen/Map3.global_position
+	$MainMenu/HostScreen/GameModeOptions.set_item_disabled(0, false) # FFA
+	$MainMenu/HostScreen/GameModeOptions.set_item_disabled(1, true) # CTF
+	$MainMenu/HostScreen/GameModeOptions.set_item_disabled(2, false) # KOTH
+	$MainMenu/HostScreen/GameModeOptions.select(0)
+	gamemode_selected = 0
 
 func _on_map_4_button_down() -> void:
 	$MainMenu/ButtonClicked.play()
 	mapChoice = GameManager.MAPS[3]
 	$MainMenu/HostScreen/MapSelected.global_position = $MainMenu/HostScreen/Map4.global_position
+	$MainMenu/HostScreen/GameModeOptions.set_item_disabled(0, true) # FFA
+	$MainMenu/HostScreen/GameModeOptions.set_item_disabled(1, false) # CTF
+	$MainMenu/HostScreen/GameModeOptions.set_item_disabled(2, false) # KOTH
+	$MainMenu/HostScreen/GameModeOptions.select(1)
+	gamemode_selected = 1
 	
 	
 func _on_map_5_button_down() -> void:
 	$MainMenu/ButtonClicked.play()
 	mapChoice = GameManager.MAPS[4]
 	$MainMenu/HostScreen/MapSelected.global_position = $MainMenu/HostScreen/Map5.global_position
+	$MainMenu/HostScreen/GameModeOptions.set_item_disabled(0, false) # FFA
+	$MainMenu/HostScreen/GameModeOptions.set_item_disabled(1, true) # CTF
+	$MainMenu/HostScreen/GameModeOptions.set_item_disabled(2, true) # KOTH
+	$MainMenu/HostScreen/GameModeOptions.select(0)
+	gamemode_selected = 0
 
 	
 func _on_settings_button_down() -> void:
@@ -423,3 +451,7 @@ func fade_to_black():
 	fade_to_black_tween.tween_property($FadeToBlack, "modulate:a", 1.0, 5)
 	fade_to_black_tween.tween_property($FadeToBlack, "modulate:a", 0.0, 3)
 	pass
+
+
+func _on_game_mode_options_item_selected(index: int) -> void:
+	gamemode_selected = index

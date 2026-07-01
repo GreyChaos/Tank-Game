@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="PowerupData" format=3 uid="uid://dsxm67d4atkah"]
+
+[ext_resource type="Script" uid="uid://bwxuv2lrc06uk" path="res://powerups/scripts/powerup_data.gd" id="1_hvcvo"]
+[ext_resource type="Texture2D" uid="uid://dr6i2r2ve7ec3" path="res://powerups/sprites/goldHealthPower.png" id="2_hvcvo"]
+
+[resource]
+script = ExtResource("1_hvcvo")
+name = "Golden Health Boost"
+length = 3.0
+move_speed = 30.0
+texture = ExtResource("2_hvcvo")
+health_change = 3

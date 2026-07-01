@@ -1,4 +1,4 @@
-# Tank Game (v0.12.3) - CTF Indicators!
+# Tank Game (v0.13) - You won/lost!
 
 A multiplayer, top-down tank battle game built in the Godot engine. Drive around chaotic arenas, shoot your friends (or CPUs), grab powerups, and survive hazards like cracking ice and raining nukes. Last tank standing wins!
 
@@ -23,6 +23,7 @@ A multiplayer, top-down tank battle game built in the Godot engine. Drive around
 * **Map Hazards:** Watch out for cracking ice tiles, falling nuke strikes, a spinning sand pit that reverses your controls, and prickly cacti.
 * **Customization & Cosmetics:** Pick your name and tank color. Plus, winners get a fun hat to wear during the next match!
 * **Persistent Settings:** Player name, color, last connected server, volume, and fullscreen preferences save automatically between sessions.
+* **Win/Lose Screen** Custom screens for winning/losing with particles/sound effects
 
 ![Capture the flag](screenshots/capture_the_flag.png)
 

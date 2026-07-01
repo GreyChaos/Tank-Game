@@ -16,7 +16,7 @@ var CPU_count = 0
 var current_map = null
 var game_in_progress = false
 
-var current_gamemode: SceneManager.GameMode = SceneManager.GameMode.FFA
+var current_gamemode: SceneManager.GameMode
 
 func playerDied(playerID: int) -> void:
 	DeadPlayers.append(playerID)
