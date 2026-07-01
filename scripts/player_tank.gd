@@ -67,10 +67,11 @@ func _physics_process(delta: float) -> void:
 		$RedFlagIndicator.look_at(get_parent().get_parent().get_team_flag(FlagSpot.TeamLabel.B).local_flag.global_position)
 	if $MultiplayerSynchronizer.get_multiplayer_authority() == multiplayer.get_unique_id():
 		#Debug L for Lud Speed
-		if Input.is_action_just_pressed("speed_boost") and multiplayer.is_server():
-			SPEED = 300
+		if Input.is_action_just_pressed("speed_boost"):
+			SPEED = 450
+			ROTATESPEED = 2
 		#Debug K to Kill
-		if Input.is_action_just_pressed("kill_player") and multiplayer.is_server():
+		if Input.is_action_just_pressed("kill_player"):
 			deal_damage.rpc(multiplayer.get_unique_id(), 3)
 		# Handle shoot.
 		if Input.is_action_just_pressed("shoot") or $ShootCooldown.wait_time == .1:
@@ -207,7 +208,11 @@ func deal_damage(hitPlayerID: int, damageAmount: int):
 		# CTF Death Logic
 		if GameManager.current_gamemode == SceneManager.GameMode.CTF:
 			if flag_being_held != null:
-				get_parent().get_parent().drop_flag(flag_being_held, global_position)
+				if multiplayer.is_server():
+					flag_being_held.get_parent().drop_flag(global_position)
+				else:
+					flag_being_held.get_parent().request_flag_death(1)
+					await GameManager.server_data_received
 				flag_being_held = null
 			respawn()
 			return
@@ -234,10 +239,14 @@ func deal_damage(hitPlayerID: int, damageAmount: int):
 func winner():
 	$Hat.frame = GameManager.Players[multiplayer.get_unique_id()].hat
 	$Hat.visible = true
+	$BlueFlagIndicator.visible = false
+	$RedFlagIndicator.visible = false
 	
 	
 func loser():
 	$Hat.visible = false
+	$BlueFlagIndicator.visible = false
+	$RedFlagIndicator.visible = false
 	
 func respawn():
 	visible = false
@@ -256,8 +265,6 @@ func restart():
 	$Hearts.frame = 0
 	currentScale = 1
 	global_scale = Vector2(currentScale, currentScale)
-	$BlueFlagIndicator.visible = false
-	$RedFlagIndicator.visible = false
 
 
 func _on_damage_cooldown_timeout() -> void:

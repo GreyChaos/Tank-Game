@@ -89,7 +89,7 @@ properties/0/replication_mode = 2
 [node name="Map1" type="Node2D" unique_id=479648284]
 script = ExtResource("1_7xies")
 PlayerScene = ExtResource("2_7xies")
-valid_gamemodes = Array[int]([0, 2])
+valid_gamemodes = Array[int]([2])
 
 [node name="Background" type="Node2D" parent="." unique_id=1272109404]
 metadata/_edit_lock_ = true

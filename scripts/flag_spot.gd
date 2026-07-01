@@ -81,6 +81,21 @@ func reset_flag(): ## Resets flag back to original spot
 	has_flag = true
 	player_with_flag = null
 	
+	
+@rpc("any_peer")
+func request_flag_death(query_id: int):
+	var sender_id = multiplayer.get_remote_sender_id()
+	# Check if game is in progress, and can join
+	if query_id == 1:
+		drop_flag(GameManager.Players[sender_id].playerObject.global_position)
+		rpc_id(sender_id, "recieve_data_from_server", true)
+
+
+@rpc("authority")
+func recieve_data_from_server(data):
+	GameManager.server_data_received.emit(data)
+	
+	
 func drop_flag(dropped_spot: Vector2): ## Drops a flag where the player died
 	if !multiplayer.is_server():
 		return

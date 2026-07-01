@@ -113,7 +113,7 @@ properties/0/replication_mode = 2
 script = ExtResource("1_imjx3")
 PlayerScene = ExtResource("2_nasj0")
 CameraSize = Vector2(1152, 648)
-valid_gamemodes = Array[int]([1, 2])
+valid_gamemodes = Array[int]([1])
 
 [node name="Background" type="Node2D" parent="." unique_id=1272109404]
 metadata/_edit_lock_ = true

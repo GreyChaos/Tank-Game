@@ -257,10 +257,10 @@ func _on_map_1_button_down() -> void:
 	$MainMenu/ButtonClicked.play()
 	mapChoice = GameManager.MAPS[0]
 	$MainMenu/HostScreen/MapSelected.global_position = $MainMenu/HostScreen/Map1.global_position
-	$MainMenu/HostScreen/GameModeOptions.set_item_disabled(0, false) # FFA
+	$MainMenu/HostScreen/GameModeOptions.set_item_disabled(0, true) # FFA
 	$MainMenu/HostScreen/GameModeOptions.set_item_disabled(1, true) # CTF
 	$MainMenu/HostScreen/GameModeOptions.set_item_disabled(2, false) # KOTH
-	$MainMenu/HostScreen/GameModeOptions.select(0)
+	$MainMenu/HostScreen/GameModeOptions.select(2)
 	gamemode_selected = 0
 
 func _on_map_2_button_down() -> void:
@@ -269,7 +269,7 @@ func _on_map_2_button_down() -> void:
 	$MainMenu/HostScreen/MapSelected.global_position = $MainMenu/HostScreen/Map2.global_position
 	$MainMenu/HostScreen/GameModeOptions.set_item_disabled(0, false) # FFA
 	$MainMenu/HostScreen/GameModeOptions.set_item_disabled(1, true) # CTF
-	$MainMenu/HostScreen/GameModeOptions.set_item_disabled(2, false) # KOTH
+	$MainMenu/HostScreen/GameModeOptions.set_item_disabled(2, true) # KOTH
 	$MainMenu/HostScreen/GameModeOptions.select(0)
 	gamemode_selected = 0
 	
@@ -279,7 +279,7 @@ func _on_map_3_button_down() -> void:
 	$MainMenu/HostScreen/MapSelected.global_position = $MainMenu/HostScreen/Map3.global_position
 	$MainMenu/HostScreen/GameModeOptions.set_item_disabled(0, false) # FFA
 	$MainMenu/HostScreen/GameModeOptions.set_item_disabled(1, true) # CTF
-	$MainMenu/HostScreen/GameModeOptions.set_item_disabled(2, false) # KOTH
+	$MainMenu/HostScreen/GameModeOptions.set_item_disabled(2, true) # KOTH
 	$MainMenu/HostScreen/GameModeOptions.select(0)
 	gamemode_selected = 0
 
@@ -289,7 +289,7 @@ func _on_map_4_button_down() -> void:
 	$MainMenu/HostScreen/MapSelected.global_position = $MainMenu/HostScreen/Map4.global_position
 	$MainMenu/HostScreen/GameModeOptions.set_item_disabled(0, true) # FFA
 	$MainMenu/HostScreen/GameModeOptions.set_item_disabled(1, false) # CTF
-	$MainMenu/HostScreen/GameModeOptions.set_item_disabled(2, false) # KOTH
+	$MainMenu/HostScreen/GameModeOptions.set_item_disabled(2, true) # KOTH
 	$MainMenu/HostScreen/GameModeOptions.select(1)
 	gamemode_selected = 1
 	
