@@ -24,14 +24,14 @@ loop = true
 offsets = PackedFloat32Array(0.07329843, 0.61256546, 0.90052354)
 colors = PackedColorArray(0.4580407, 0.3436833, 0.031952657, 1, 1, 1, 0.42745098, 0.8039216, 1, 1, 1, 0)
 
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_nasj0"]
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_6p068"]
 gradient = SubResource("Gradient_imjx3")
 
 [sub_resource type="Curve" id="Curve_hcsfy"]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
 point_count = 2
 
-[sub_resource type="CurveTexture" id="CurveTexture_0i8bn"]
+[sub_resource type="CurveTexture" id="CurveTexture_wl1f0"]
 curve = SubResource("Curve_hcsfy")
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_6p068"]
@@ -45,21 +45,21 @@ initial_velocity_max = 110.78
 gravity = Vector3(0, 0, 0)
 scale_min = 4.0
 scale_max = 10.0
-scale_curve = SubResource("CurveTexture_0i8bn")
-color_ramp = SubResource("GradientTexture1D_nasj0")
+scale_curve = SubResource("CurveTexture_wl1f0")
+color_ramp = SubResource("GradientTexture1D_6p068")
 
 [sub_resource type="Gradient" id="Gradient_nasj0"]
 offsets = PackedFloat32Array(0.07329843, 0.61256546, 0.90052354)
 colors = PackedColorArray(0.385144, 0, 0.100871734, 1, 0.14409083, 1.015258e-07, 2.1057204e-08, 0.8039216, 1, 1, 1, 0)
 
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_hcsfy"]
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_poma4"]
 gradient = SubResource("Gradient_nasj0")
 
 [sub_resource type="Curve" id="Curve_0i8bn"]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
 point_count = 2
 
-[sub_resource type="CurveTexture" id="CurveTexture_6p068"]
+[sub_resource type="CurveTexture" id="CurveTexture_a3ia0"]
 curve = SubResource("Curve_0i8bn")
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_wl1f0"]
@@ -72,8 +72,8 @@ initial_velocity_max = 250.0
 gravity = Vector3(0, 0, 0)
 scale_min = 4.0
 scale_max = 10.0
-scale_curve = SubResource("CurveTexture_6p068")
-color_ramp = SubResource("GradientTexture1D_hcsfy")
+scale_curve = SubResource("CurveTexture_a3ia0")
+color_ramp = SubResource("GradientTexture1D_poma4")
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_v3n02"]
 radius = 41.04875
@@ -154,7 +154,7 @@ position = Vector2(938, 34)
 position = Vector2(1018, 88)
 
 [node name="RestartTimer" type="Timer" parent="." unique_id=1285126305]
-wait_time = 5.0
+wait_time = 2.0
 one_shot = true
 
 [node name="Powerups" type="Node2D" parent="." unique_id=1726631371]
@@ -245,6 +245,7 @@ wait_time = 2.0
 autostart = true
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=272834565]
+layer = 10
 
 [node name="GameOver" type="RichTextLabel" parent="CanvasLayer" unique_id=1186285920]
 visible = false

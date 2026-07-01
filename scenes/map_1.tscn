@@ -137,7 +137,7 @@ position = Vector2(404, 141)
 position = Vector2(-448, 257)
 
 [node name="RestartTimer" type="Timer" parent="." unique_id=1285126305]
-wait_time = 5.0
+wait_time = 2.0
 one_shot = true
 
 [node name="Powerups" type="Node2D" parent="." unique_id=1726631371]
@@ -184,6 +184,8 @@ wait_time = 2.0
 autostart = true
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=540393088]
+layer = 10
+visible = false
 
 [node name="GameOver" type="RichTextLabel" parent="CanvasLayer" unique_id=669485429]
 visible = false

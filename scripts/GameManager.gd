@@ -9,15 +9,21 @@ signal gameOver
 signal cleanShells
 signal server_data_received
 signal switchMaps(mapString: String)
-signal fade_to_black
 var Powerups = []
 var TeamA = []
 var TeamB = []
 var CPU_count = 0
 var current_map = null
 var game_in_progress = false
+# Handle when all players have loaded, and ready to start
+signal start_game
+signal map_loaded
+var ready_players = []
 
 var current_gamemode: SceneManager.GameMode
+
+func _ready() -> void:
+	map_loaded.connect(_map_loaded.rpc)
 
 func playerDied(playerID: int) -> void:
 	DeadPlayers.append(playerID)
@@ -30,3 +36,16 @@ func cleanUpShells() -> void:
 @rpc("authority","call_local","reliable")
 func change_game_mode(new_gamemode: SceneManager.GameMode):
 	current_gamemode = new_gamemode
+
+
+@rpc("any_peer","call_local","reliable")
+func _map_loaded():
+	var player_id = multiplayer.get_remote_sender_id()
+	if multiplayer.is_server():      
+		ready_players.append(player_id)
+		if ready_players.size() == Players.size():
+			start_game_signal.rpc()
+			
+@rpc("authority","call_local","reliable")
+func start_game_signal():
+	start_game.emit()

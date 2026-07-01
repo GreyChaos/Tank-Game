@@ -13,6 +13,7 @@ enum GameMode{
 @export var valid_gamemodes: Array[GameMode]
 
 func _ready() -> void:
+	GameManager.gameOver.connect(game_over)
 	if multiplayer.is_server():
 		if GameManager.current_gamemode not in valid_gamemodes:
 			GameManager.change_game_mode.rpc(valid_gamemodes.pick_random())
@@ -20,9 +21,11 @@ func _ready() -> void:
 	var spawnPoints = get_tree().get_nodes_in_group("PlayerSpawnPoint")
 	if GameManager.current_gamemode == GameMode.FFA:
 		spawnPoints.shuffle()
+	GameManager.map_loaded.emit()
 	if multiplayer.is_server():
+		await GameManager.start_game
 		spawn_players(spawnPoints)
-
+		
 func spawn_players(spawnPoints : Array) -> void:
 	var index = 0
 	var teamA_spawns = spawnPoints.filter(func(spawnpoint): return spawnpoint.name.begins_with("TeamA"))
@@ -110,3 +113,6 @@ func start_broadcast(message: String):
 
 func _on_broadcast_timer_timeout() -> void:
 	$CanvasLayer/Broadcast.text = ""
+	
+func game_over():
+	GameManager.Players[multiplayer.get_unique_id()].hat = winning_hat

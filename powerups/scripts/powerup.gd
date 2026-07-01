@@ -41,7 +41,11 @@ func _on_timer_timeout() -> void:
 		queue_free()
 		return
 	spawnedSpot.hasItem = false
-	playerAffected.reset_base_stats()
+	if playerAffected == null:
+		queue_free()
+		return
+	else:
+		playerAffected.reset_base_stats()
 	queue_free()
 	
 	

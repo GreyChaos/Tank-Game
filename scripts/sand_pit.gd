@@ -7,6 +7,7 @@ func _ready() -> void:
 	tween.tween_property(self, "scale", Vector2(0.01, 0.01), 6).set_trans(Tween.TRANS_SINE)
 	tween.tween_callback(on_reached_min_scale)
 	tween.tween_property(self, "scale", Vector2(.7, .7), 6).set_trans(Tween.TRANS_SINE)
+	GameManager.gameOver.connect(game_over)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -29,3 +30,7 @@ func on_reached_min_scale():
 @rpc("authority", "call_local", "reliable")
 func moveSpot(newSpot: Vector2):
 	global_position = newSpot
+
+
+func game_over():
+	$".".queue_free()

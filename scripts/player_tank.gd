@@ -18,6 +18,7 @@ var name_color
 @onready var camera = $Camera2D
 
 func _ready() -> void:
+	GameManager.gameOver.connect(game_over)
 	if GameManager.Players[multiplayer.get_unique_id()].wasWinner:
 		winner()
 	spawn_cords = global_position
@@ -274,3 +275,8 @@ func _on_damage_cooldown_timeout() -> void:
 
 func change_name_color(color: Color):
 	$Name.modulate = color
+	
+func game_over():
+	if multiplayer.is_server():
+		pass
+		# queue_free()
