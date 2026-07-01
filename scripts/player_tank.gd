@@ -67,11 +67,11 @@ func _physics_process(delta: float) -> void:
 		$RedFlagIndicator.look_at(get_parent().get_parent().get_team_flag(FlagSpot.TeamLabel.B).local_flag.global_position)
 	if $MultiplayerSynchronizer.get_multiplayer_authority() == multiplayer.get_unique_id():
 		#Debug L for Lud Speed
-		if Input.is_action_just_pressed("speed_boost"):
+		if Input.is_action_just_pressed("speed_boost") and multiplayer.is_server():
 			SPEED = 450
 			ROTATESPEED = 2
 		#Debug K to Kill
-		if Input.is_action_just_pressed("kill_player"):
+		if Input.is_action_just_pressed("kill_player") and multiplayer.is_server():
 			deal_damage.rpc(multiplayer.get_unique_id(), 3)
 		# Handle shoot.
 		if Input.is_action_just_pressed("shoot") or $ShootCooldown.wait_time == .1:
@@ -120,8 +120,9 @@ func _physics_process(delta: float) -> void:
 func spawnShell(spawnPOS: Vector2, spawnROT: float):
 	if next_shot_power:
 		next_shot_power = false
+		if not multiplayer.is_server():
+			return
 		if powerData.name == "Nuke":
-			if multiplayer.is_server():
 				for i in range(25):
 					var nuke = FIRED_NUKE.instantiate()
 					nuke.position = Vector2(randi_range(-576, 576), randi_range(-324, 324))
@@ -135,7 +136,7 @@ func spawnShell(spawnPOS: Vector2, spawnROT: float):
 			shell.scale *= powerData.shell_scale
 			shell.speed = powerData.shell_speed
 			shell.immune_to_objects = powerData.shell_immune
-			get_parent().add_child(shell)
+			get_parent().add_child(shell, true)
 		if powerData.name == "Triple Shot":
 			rpc("spawnShell", $BulletSpawn.global_position, $BulletSpawn.global_rotation)
 			rpc("spawnShell", $BulletSpawn2.global_position, $BulletSpawn2.global_rotation)
@@ -155,7 +156,7 @@ func spawnShell(spawnPOS: Vector2, spawnROT: float):
 		shell.rotation = spawnROT
 		shell.fired_by = self
 		$ShootParticle.emitting = true
-		get_parent().add_child(shell)
+		get_parent().add_child(shell, true)
 
 
 func apply_powerup(powerup: PowerupData):

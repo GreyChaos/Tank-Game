@@ -137,6 +137,7 @@ func spawnShell(spawnPOS: Vector2, spawnROT: float):
 	shell.rotation = spawnROT
 	shell.fired_by = self
 	$ShootParticle.emitting = true
+	
 	get_parent().add_child(shell)
 
 

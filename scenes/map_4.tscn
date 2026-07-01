@@ -377,7 +377,7 @@ shape = SubResource("CircleShape2D_v3n02")
 [node name="PlayersContainer" type="Node2D" parent="." unique_id=209335957]
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="." unique_id=1658929471]
-_spawnable_scenes = PackedStringArray("uid://ip6213vm7nec", "uid://drmyjugr4qjh3", "uid://605afdu10blj")
+_spawnable_scenes = PackedStringArray("uid://ip6213vm7nec", "uid://drmyjugr4qjh3", "uid://605afdu10blj", "uid://bm0kcrg1bxsop")
 spawn_path = NodePath("../PlayersContainer")
 
 [node name="RainingNukes" type="Timer" parent="." unique_id=769911514]

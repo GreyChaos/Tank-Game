@@ -367,7 +367,7 @@ func load_player_settings():
 	var err = config.load("user://settings.cfg")
 	if err == OK:
 		# Load name
-		var saved_name = config.get_value("player", "name", "Default Name")
+		var saved_name = config.get_value("player", "name", "Name")
 		$MainMenu/CustomizeScreen/Name.text = saved_name
 		# Load color
 		var saved_color_hex = config.get_value("player", "color", "#ffffff")

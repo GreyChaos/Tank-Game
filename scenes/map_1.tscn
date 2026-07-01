@@ -275,7 +275,7 @@ process_material = SubResource("ParticleProcessMaterial_wqnuq")
 [node name="PlayersContainer" type="Node2D" parent="." unique_id=835041128]
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="." unique_id=147476515]
-_spawnable_scenes = PackedStringArray("uid://ip6213vm7nec", "uid://605afdu10blj", "uid://drmyjugr4qjh3")
+_spawnable_scenes = PackedStringArray("uid://ip6213vm7nec", "uid://605afdu10blj", "uid://drmyjugr4qjh3", "uid://bm0kcrg1bxsop")
 spawn_path = NodePath("../PlayersContainer")
 
 [node name="NavigationRegion2D2" type="NavigationRegion2D" parent="." unique_id=140288542]
