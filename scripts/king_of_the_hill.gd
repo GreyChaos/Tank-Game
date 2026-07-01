@@ -2,6 +2,7 @@ extends Node2D
 
 var player_in_control
 var players_and_timers = {}
+var game_over = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -13,8 +14,7 @@ func _process(delta: float) -> void:
 	if GameManager.current_gamemode == SceneManager.GameMode.KOTH:
 		self.show()
 		update_hill_progress()
-		
-	
+
 
 
 func _on_hill_body_entered(area: Area2D) -> void:
@@ -40,9 +40,13 @@ func _on_hill_body_exited(area: Area2D) -> void:
 		for body in $Hill.get_overlapping_areas():
 			if body.get_parent() is CharacterBody2D:
 				_on_hill_body_entered(body)
+	elif $Hill.get_overlapping_areas().size() == 1:
+		players_and_timers[player_in_control].Timer.paused = false
+		
 		
 func _on_hill_timer_timeout():
 	if multiplayer.is_server():
+		game_over = true
 		$"CanvasLayer/Hill Progress".text = ""
 		# $"CanvasLayer/Hill Progress".text = str(GameManager.Players[player_in_control.name.to_int()].name) + " has won!" 		Add this later to show the winner with text
 		var loser_players = GameManager.Players.duplicate()
@@ -62,8 +66,31 @@ func end_game_for_all():
 		
 
 func update_hill_progress():
-	if multiplayer.is_server():
+	if multiplayer.is_server() and !game_over:
+		# Hill is contested
+		if $Hill.get_overlapping_areas().size() > 1:
+			players_and_timers[player_in_control].Timer.paused = true
+			$"CanvasLayer/Hill Progress".text = "Hill Contested!"
+			return
 		if player_in_control != null:
 			$"CanvasLayer/Hill Progress".text = str(GameManager.Players[player_in_control.name.to_int()].name) + " %0.1f" % players_and_timers[player_in_control].Timer.time_left + " Seconds to win!"
 		else:
 			$"CanvasLayer/Hill Progress".text = "Nobody on the hill!"
+
+
+func _on_hill_moving_timer_timeout() -> void:
+	if multiplayer.is_server() and !game_over:
+		var spawn_points = $HillSpawnPoints.get_children()
+		spawn_points.shuffle()
+		for point in spawn_points:
+			if point.global_position == $Hill.global_position:
+				continue
+			$Hill.global_position = point.global_position
+			get_parent().start_broadcast("Hill Moved!")
+			return
+	
+	
+	
+	
+	
+	
