@@ -36,7 +36,6 @@ func gameOver() -> void:
 		$"../Victory Particles".emitting = true
 		GameManager.Players[multiplayer.get_unique_id()].playerObject.winner()
 		GameManager.Players[multiplayer.get_unique_id()].wasWinner = true
-		
 
 
 func _on_restart_timer_timeout() -> void:

@@ -11,7 +11,8 @@ size = Vector2(7, 12)
 script = ExtResource("1_6fq18")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1766868027]
-scale = Vector2(0.71875, 0.71875)
+position = Vector2(-0.3749999, 0)
+scale = Vector2(0.671875, 0.71875)
 texture = ExtResource("2_8y80q")
 
 [node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="." unique_id=1810560585]

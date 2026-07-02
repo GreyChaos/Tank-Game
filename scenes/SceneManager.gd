@@ -12,6 +12,7 @@ enum GameMode{
 }
 @export var valid_gamemodes: Array[GameMode]
 
+
 func _ready() -> void:
 	GameManager.gameOver.connect(game_over)
 	if multiplayer.is_server():
@@ -56,6 +57,7 @@ func spawn_players(spawnPoints : Array) -> void:
 	cpu_names.shuffle()
 	for i in range(GameManager.CPU_count):
 		if GameManager.current_gamemode == GameMode.CTF:
+			@warning_ignore("shadowed_global_identifier")
 			var CPU = CPUScene.instantiate()
 			if i % 2 == 0:
 				GameManager.TeamA.append(CPU)
@@ -69,6 +71,7 @@ func spawn_players(spawnPoints : Array) -> void:
 			CPU.robot_name = cpu_names.pop_front()
 			$PlayersContainer.add_child(CPU, true)
 		else:
+			@warning_ignore("shadowed_global_identifier")
 			var CPU = CPUScene.instantiate()
 			CPU.global_position = spawnPoints.pop_front().global_position
 			GameManager.CPUS[i] = CPU
@@ -108,11 +111,8 @@ func get_team_flag(team: FlagSpot.TeamLabel) -> Area2D:
 
 
 func start_broadcast(message: String):
-	$CanvasLayer/Broadcast.text = message
-	$CanvasLayer/BroadcastTimer.start()
+	get_parent().get_parent().get_parent().broadcast(message)
 
-func _on_broadcast_timer_timeout() -> void:
-	$CanvasLayer/Broadcast.text = ""
 	
 func game_over():
 	GameManager.Players[multiplayer.get_unique_id()].hat = winning_hat

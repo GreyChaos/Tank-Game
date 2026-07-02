@@ -33,20 +33,21 @@ func _on_area_2d_body_entered(body: Node2D) -> void:
 
 
 func _on_timer_timeout() -> void:
-	GameManager.Powerups.erase(self)
-	if spawnedSpot == null:
-		print("Spawned Spot Null")
-		playerAffected.reset_base_stats()
-		playerAffected.next_shot_power = false
+	if multiplayer.is_server():
+		GameManager.Powerups.erase(self)
+		if spawnedSpot == null:
+			print("Spawned Spot Null")
+			playerAffected.reset_base_stats()
+			playerAffected.next_shot_power = false
+			queue_free()
+			return
+		spawnedSpot.hasItem = false
+		if playerAffected == null:
+			queue_free()
+			return
+		else:
+			playerAffected.reset_base_stats()
 		queue_free()
-		return
-	spawnedSpot.hasItem = false
-	if playerAffected == null:
-		queue_free()
-		return
-	else:
-		playerAffected.reset_base_stats()
-	queue_free()
 	
 	
 func early_clear() -> void:

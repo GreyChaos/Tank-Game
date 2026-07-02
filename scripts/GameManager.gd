@@ -7,7 +7,9 @@ var DeadPlayers = []
 var dead_cpus = []
 signal gameOver
 signal cleanShells
+@warning_ignore("unused_signal")
 signal server_data_received
+@warning_ignore("unused_signal")
 signal switchMaps(mapString: String)
 var Powerups = []
 var TeamA = []

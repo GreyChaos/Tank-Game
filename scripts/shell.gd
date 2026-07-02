@@ -7,7 +7,8 @@ var fired_by
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	GameManager.cleanShells.connect(cleanShells)
+	if multiplayer.is_server():
+		GameManager.cleanShells.connect(cleanShells)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta: float) -> void:
@@ -15,23 +16,24 @@ func _physics_process(delta: float) -> void:
 
 
 func _on_area_2d_body_entered(_body: Node2D) -> void:
-	if immune_to_objects:
-		return
-	queue_free()
+	if multiplayer.is_server():
+		if immune_to_objects:
+			return
+		queue_free()
 
 func cleanShells() -> void:
-	queue_free()
+	if multiplayer.is_server():
+		queue_free()
 
 func _on_player_hit_body_entered(body: Node2D) -> void:
-	if !multiplayer.is_server():
-		return
-	if body is CharacterBody2D:
-		if body == fired_by:
-			return
-		var hitPlayerID = str(body.name).to_int()
-		if body.has_method("cpu_deal_damage"):
-			body.cpu_deal_damage(1)
-		elif GameManager.Players.has(hitPlayerID):
-			body.deal_damage.rpc(hitPlayerID, 1)
-		
-	queue_free()
+	if multiplayer.is_server():
+		if body is CharacterBody2D:
+			if body == fired_by:
+				return
+			var hitPlayerID = str(body.name).to_int()
+			if body.has_method("cpu_deal_damage"):
+				body.cpu_deal_damage(1)
+			elif GameManager.Players.has(hitPlayerID):
+				body.deal_damage.rpc(hitPlayerID, 1)
+			
+		queue_free()

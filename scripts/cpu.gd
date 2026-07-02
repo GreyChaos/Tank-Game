@@ -47,7 +47,7 @@ func _physics_process(delta: float) -> void:
 						return
 					if GameManager.TeamB.has(self) and GameManager.TeamB.has($RayCast2D.get_collider()):
 						return
-				rpc("spawnShell", $BulletSpawn.global_position, $BulletSpawn.global_rotation + PI)
+				rpc("request_shell", $BulletSpawn.global_position, $BulletSpawn.global_rotation + PI)
 				$ShootCooldown.start()
 
 
@@ -131,7 +131,8 @@ func get_closest_player() -> Vector2:
 
 
 @rpc("any_peer", "call_local", "reliable")
-func spawnShell(spawnPOS: Vector2, spawnROT: float):
+func request_shell(spawnPOS: Vector2, spawnROT: float):
+	@warning_ignore("shadowed_global_identifier")
 	var shell = SHELLSCENE.instantiate()
 	shell.position = spawnPOS
 	shell.rotation = spawnROT

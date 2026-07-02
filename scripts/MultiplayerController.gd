@@ -47,7 +47,7 @@ func _physics_process(_delta: float) -> void:
 			$MainMenu/Music.play()
 			$MainMenu/CountScreen.visible = false
 			GameManager.Players.clear()
-			$SubViewportContainer/SubViewport/AnimationPlayer.play("RESET")
+			$GameOverLayerContainer/GameOverLayer/SubViewportContainer/SubViewport/AnimationPlayer.play("RESET")
 			GameManager.ready_players.clear()
 			GameManager.DeadPlayers.clear()
 			GameManager.game_in_progress = false
@@ -81,7 +81,7 @@ func peer_disconnected(id):
 		$MainMenu/JoinScreen/Join.visible = true
 		$MainMenu/JoinScreen/Back.visible = true
 		GameManager.Players.clear()
-		$SubViewportContainer/SubViewport/AnimationPlayer.play("RESET")
+		$GameOverLayerContainer/GameOverLayer/SubViewportContainer/SubViewport/AnimationPlayer.play("RESET")
 		GameManager.ready_players.clear()
 		GameManager.DeadPlayers.clear()
 		$MainMenu/JoinScreen/Disconnect.visible = false
@@ -167,15 +167,15 @@ func SendPlayerInfo(player_name, id, custom_color: Color):
 	$MainMenu/"HostScreen/CPU Slider".max_value = 8 - GameManager.Players.size()
 
 func start_game_signal():
-	$SubViewportContainer/SubViewport/AnimationPlayer.play("RESET")
+	$GameOverLayerContainer/GameOverLayer/SubViewportContainer/SubViewport/AnimationPlayer.play("RESET")
 
 @rpc("any_peer", "call_local", "reliable")
 func StartGame(mapPath: String):
 	# var fade_to_black_tween = create_tween()
 	# fade_to_black_tween.tween_property($FadeToBlack, "modulate:a", 1.0, 2)
 	# fade_to_black_tween.tween_property($FadeToBlack, "modulate:a", 0.0, 3)
-	$SubViewportContainer/SubViewport/MapPreview.texture = map_previews[int(mapPath.get_basename()[-1]) -1]
-	$SubViewportContainer/SubViewport/AnimationPlayer.play("top_down")
+	$GameOverLayerContainer/GameOverLayer/SubViewportContainer/SubViewport/MapPreview.texture = map_previews[int(mapPath.get_basename()[-1]) -1]
+	$GameOverLayerContainer/GameOverLayer/SubViewportContainer/SubViewport/AnimationPlayer.play("top_down")
 	$MainMenu/MapSpawner.spawn_path = "../MapContainer"
 	if currentScene != null:
 		currentScene.queue_free()
@@ -186,11 +186,12 @@ func StartGame(mapPath: String):
 	GameManager.game_in_progress = true
 	
 	
+	
 @rpc("any_peer", "call_local", "reliable")
 func ContinueGame(mapPath: String):
 	# Load fake screenshot of map for transition smoothing
-	$SubViewportContainer/SubViewport/MapPreview.texture = map_previews[int(mapPath.get_basename()[-1]) -1]
-	$SubViewportContainer/SubViewport/AnimationPlayer.play("top_down")
+	$GameOverLayerContainer/GameOverLayer/SubViewportContainer/SubViewport/MapPreview.texture = map_previews[int(mapPath.get_basename()[-1]) -1]
+	$GameOverLayerContainer/GameOverLayer/SubViewportContainer/SubViewport/AnimationPlayer.play("top_down")
 	# Load actual map
 	mapChoice = mapPath
 	if is_instance_valid(currentScene):
@@ -199,7 +200,7 @@ func ContinueGame(mapPath: String):
 				player.get_node("MultiplayerSynchronizer").public_visibility = false
 		previous_scene = currentScene
 		# Smooth transition here
-		await $SubViewportContainer/SubViewport/AnimationPlayer.animation_finished
+		await $GameOverLayerContainer/GameOverLayer/SubViewportContainer/SubViewport/AnimationPlayer.animation_finished
 		# End with Queue free, and full loading of the other map
 		previous_scene.queue_free()
 		currentScene = null
@@ -216,7 +217,7 @@ func server_shutting_down():
 	$MainMenu/JoinScreen/Back.visible = true
 	$MainMenu/JoinScreen/Disconnect.visible = false
 	GameManager.Players.clear()
-	$SubViewportContainer/SubViewport/AnimationPlayer.play("RESET")
+	$GameOverLayerContainer/GameOverLayer/SubViewportContainer/SubViewport/AnimationPlayer.play("RESET")
 	GameManager.ready_players.clear()
 	GameManager.DeadPlayers.clear()
 	$MainMenu.visible = true
@@ -452,7 +453,7 @@ func _on_cancel_button_down() -> void:
 	$MainMenu/HostScreen/Start.visible = false 
 	$MainMenu/HostScreen/Host.visible = true
 	GameManager.Players.clear()
-	$SubViewportContainer/SubViewport/AnimationPlayer.play("RESET")
+	$GameOverLayerContainer/GameOverLayer/SubViewportContainer/SubViewport/AnimationPlayer.play("RESET")
 	GameManager.ready_players.clear()
 	GameManager.DeadPlayers.clear()
 	$MainMenu/"Player List".visible = false
@@ -480,6 +481,11 @@ func fade_to_black():
 	fade_to_black_tween.tween_property($FadeToBlack, "modulate:a", 0.0, 2)
 	pass
 
-
 func _on_game_mode_options_item_selected(index: int) -> void:
 	gamemode_selected = index
+	
+func broadcast(message: String):
+	$GameOverLayerContainer/GameOverLayer/Broadcast.text = message
+	$GameOverLayerContainer/GameOverLayer/BroadcastTimer.start()
+	await $GameOverLayerContainer/GameOverLayer/BroadcastTimer.timeout
+	$GameOverLayerContainer/GameOverLayer/Broadcast.text = ""

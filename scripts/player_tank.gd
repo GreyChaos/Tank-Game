@@ -18,6 +18,7 @@ var name_color
 @onready var camera = $Camera2D
 
 func _ready() -> void:
+	get_parent().get_parent().get_node("ShellSpawner").spawn_function = _spawn_shell
 	GameManager.gameOver.connect(game_over)
 	if GameManager.Players[multiplayer.get_unique_id()].wasWinner:
 		winner()
@@ -79,7 +80,11 @@ func _physics_process(delta: float) -> void:
 			if $ShootCooldown.is_stopped():
 				if $Shield.visible: # Disable shield if shot fired
 					$Shield.visible = false
-				rpc("spawnShell", $BulletSpawn.global_position, $BulletSpawn.global_rotation)
+				if multiplayer.is_server():
+					request_shell($BulletSpawn.global_position, $BulletSpawn.global_rotation)
+				else:
+					rpc_id(1, "request_shell", $BulletSpawn.global_position, $BulletSpawn.global_rotation)
+				$ShootParticle.emitting = true
 				$ShootCooldown.start()
 				
 			
@@ -117,31 +122,28 @@ func _physics_process(delta: float) -> void:
 			rotation += rotationamount * delta * ROTATESPEED
 		move_and_slide()
 
-@rpc("any_peer", "call_local", "reliable")
-func spawnShell(spawnPOS: Vector2, spawnROT: float):
+@rpc("any_peer", "reliable")
+func request_shell(spawnPOS: Vector2, spawnROT: float):
 	if next_shot_power:
 		next_shot_power = false
-		if not multiplayer.is_server():
-			return
 		if powerData.name == "Nuke":
 				for i in range(25):
 					var nuke = FIRED_NUKE.instantiate()
 					nuke.position = Vector2(randi_range(-576, 576), randi_range(-324, 324))
 					get_parent().add_child(nuke, true)
 		if powerData.name == "Big Shot":
-			var shell = SHELLSCENE.instantiate()
-			shell.position = spawnPOS
-			shell.rotation = spawnROT
-			shell.fired_by = self
-			$ShootParticle.emitting = true
-			shell.scale *= powerData.shell_scale
-			shell.speed = powerData.shell_speed
-			shell.immune_to_objects = powerData.shell_immune
-			get_parent().add_child(shell, true)
+			get_parent().get_parent().get_node("ShellSpawner").spawn({
+				"pos": spawnPOS,
+				"rot": spawnROT,
+				"fired_by": self,
+				"scale": Vector2(powerData.shell_scale,powerData.shell_scale),
+				"speed": powerData.shell_speed,
+				"immune_to_objects": powerData.shell_immune
+			})
 		if powerData.name == "Triple Shot":
-			rpc("spawnShell", $BulletSpawn.global_position, $BulletSpawn.global_rotation)
-			rpc("spawnShell", $BulletSpawn2.global_position, $BulletSpawn2.global_rotation)
-			rpc("spawnShell", $BulletSpawn3.global_position, $BulletSpawn3.global_rotation)
+			request_shell($BulletSpawn.global_position, $BulletSpawn.global_rotation)
+			request_shell($BulletSpawn2.global_position, $BulletSpawn2.global_rotation)
+			request_shell($BulletSpawn3.global_position, $BulletSpawn3.global_rotation)
 		if powerData.name == "360 Shot":
 			var spawn_count = 15
 			var radius = 50.0
@@ -149,15 +151,30 @@ func spawnShell(spawnPOS: Vector2, spawnROT: float):
 			for i in range(spawn_count):
 				var current_angle = i * angle_step
 				var offset = Vector2(cos(current_angle), sin(current_angle)) * radius
-				rpc("spawnShell", global_position + offset, current_angle)
+				request_shell(global_position + offset, current_angle)
 		powerData = null
 	else:
-		var shell = SHELLSCENE.instantiate()
-		shell.position = spawnPOS
-		shell.rotation = spawnROT
-		shell.fired_by = self
-		$ShootParticle.emitting = true
-		get_parent().add_child(shell, true)
+		get_parent().get_parent().get_node("ShellSpawner").spawn({
+			"pos": spawnPOS,
+			"rot": spawnROT,
+			"fired_by": self,
+			"scale": Vector2(1,1),
+			"speed": 200,
+			"immune_to_objects": false
+		})
+
+
+func _spawn_shell(data: Dictionary) -> Node:
+	@warning_ignore("shadowed_global_identifier")
+	var shell = SHELLSCENE.instantiate()
+	shell.position = data.pos
+	shell.rotation = data.rot
+	shell.fired_by = data.fired_by
+	shell.scale = data.scale
+	shell.speed = data.speed
+	shell.immune_to_objects = data.immune_to_objects
+	
+	return shell
 
 
 func apply_powerup(powerup: PowerupData):
@@ -166,6 +183,8 @@ func apply_powerup(powerup: PowerupData):
 	# Health
 	if powerup.health_change > 0 and currentHealth < maxHealth:
 		currentHealth += powerup.health_change
+		if currentHealth > 3:
+			currentHealth = 3
 		$Hearts.frame -= powerup.health_change
 		if $Hearts.frame < 0:
 			$Hearts.frame = 0
@@ -213,7 +232,7 @@ func deal_damage(hitPlayerID: int, damageAmount: int):
 				if multiplayer.is_server():
 					flag_being_held.get_parent().drop_flag(global_position)
 				else:
-					flag_being_held.get_parent().request_flag_death(1)
+					flag_being_held.get_parent().request_flag_death.rpc_id(1, 1)
 					await GameManager.server_data_received
 				flag_being_held = null
 			respawn()
@@ -255,7 +274,10 @@ func respawn():
 	set_physics_process(false)
 	$CollisionShape2D.set_deferred("disabled", true)
 	$RespawnTimer.start()
-	position = spawn_cords
+	if GameManager.current_gamemode == SceneManager.GameMode.KOTH:
+		position = get_tree().get_nodes_in_group("PlayerSpawnPoint").pick_random().global_position
+	else:
+		position = spawn_cords
 		
 func restart():
 	reset_base_stats()
